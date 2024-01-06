@@ -6,7 +6,7 @@
 
 ---
 
-# Privacy-Preserving Logistic Regression Training on Large Datasets [the mini-batch version of enhanced NAG with Quadratic Gradient]
+# Privacy-Preserving Logistic Regression Training on Large Datasets [the mini-batch version of enhanced NAG]
 
 ---
 ## https://github.com/K-miran/HELR
