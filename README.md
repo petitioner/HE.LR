@@ -7,7 +7,7 @@
 ---
 
 # Privacy-Preserving Logistic Regression Training on Large Datasets 
-        [a follow-up work for the first paper on the mini-batch version]
+        [a follow-up work for the first paper but on the mini-batch version]
 
 ---
 ## https://github.com/K-miran/HELR
