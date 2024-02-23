@@ -242,10 +242,10 @@ double** MyTools::zInvBFromFile(double **zDataTrain, long& factorDim, long& samp
 }
 
 void MyTools::printData(double** zData, long factorDim, long sampleDim) {
-	for (long i = 0; i < (sampleDim>2?2:sampleDim); ++i) {
+	for (long i = 0; i < (sampleDim); ++i) {
 		cout << "The " << std::setw(3) << i << "-th Row:";
 		for (long j = 0; j < factorDim; ++j) {
-			cout << std::showpos << std::fixed << std::setw(12)  << zData[i][j] ;
+			cout << std::showpos << std::fixed << std::setw(16)  << zData[i][j] ;
 		}
 		cout << endl << endl;
 	}
@@ -301,20 +301,37 @@ void MyTools::shuffleDataSync(double** X, long factorDim, long sampleDim, double
  * @param  : sampleDim : the number of rows in the data.
  * @return :
  * @author : no one
+X = [[1]+row[1:] for row in data[:]]
+for colidx in range(len(X[0])):
+	colmax = X[0][colidx]
+	colmin = X[0][colidx]
+	for (rowidx, row) in enumerate(X):
+		if row[colidx] >= colmax :
+			colmax = row[colidx]
+		if row[colidx] <= colmin :
+			colmin = row[colidx]
+	for (rowidx, row) in enumerate(X):
+		if (colmax - colmin) < epsilon:
+			row[colidx] = 0.5
+		else:
+			row[colidx] = float(row[colidx] - colmin) / (colmax - colmin)
  */
 void MyTools::normalizeZData(double** zData, long factorDim, long sampleDim) {
-	long i, j;
-	double m;
-	for (i = 0; i < factorDim; ++i) {
-		m = 0.0;
-		for (j = 0; j < sampleDim; ++j) {
-			m = max(m, abs(zData[j][i]));
+
+	for (long i = 0; i < factorDim; ++i) {
+		double colmin = zData[0][i]; 
+		double colmax = zData[0][i]; 
+
+		for (long j = 0; j < sampleDim; ++j) {
+			colmax = max(colmax, zData[j][i]);
+			colmin = min(colmin, zData[j][i]);
 		}
 
-		if(m < 1e-10) continue;
-
-		for (j = 0; j < sampleDim; ++j) {
-			zData[j][i] /= m;
+		for (long j = 0; j < sampleDim; ++j) {
+			if (colmax - colmin < 1e-10 )  
+				zData[j][i] = 0.5;
+			else 
+				zData[j][i] = float(zData[j][i] - colmin) / (colmax - colmin) ;
 		}
 	}
 }
