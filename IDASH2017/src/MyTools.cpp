@@ -4,6 +4,7 @@
 #include <math.h>
 #include <fstream>
 #include <iostream>
+#include <iomanip>     //setw
 #include <string.h>
 #include <string>
 #include <vector>
