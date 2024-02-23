@@ -15,6 +15,8 @@ mv HE.LR IDASH2017-master
 
 Step 2: Place IDASH2017-master in the Correct Directory
 Place the IDASH2017-master repository in the specified directory to align with /home/sunly/Downloads/IDASH2017-master/IDASH2017/lib/lib.
+
+Step 3: Unzip libntl.a.zip to IDASH2017/lib/lib/libntl.a
 ```
 
 
