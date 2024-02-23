@@ -17,6 +17,31 @@ Step 2: Place IDASH2017-master in the Correct Directory
 Place the IDASH2017-master repository in the specified directory to align with /home/sunly/Downloads/IDASH2017-master/IDASH2017/lib/lib.
 
 Step 3: Unzip libntl.a.zip to IDASH2017/lib/lib/libntl.a
+
+
+
+
+root@vultr:/# cd home/
+root@vultr:/home# mkdir sunly
+root@vultr:/home# cd sunly/
+root@vultr:/home/sunly# mkdir Downloads
+root@vultr:/home/sunly# cd Downloads/
+root@vultr:/home/sunly/Downloads# git clone https://github.com/petitioner/HE.LR
+root@vultr:/home/sunly/Downloads# mv HE.LR IDASH2017-master
+root@vultr:/home/sunly/Downloads# cd IDASH2017-master/IDASH2017/lib/lib/
+root@vultr:/home/sunly/Downloads/IDASH2017-master/IDASH2017/lib/lib# ls
+libgmp.a  libgmpxx.a  libntl.a.zip  README.md
+root@vultr:/home/sunly/Downloads/IDASH2017-master/IDASH2017/lib/lib# unzip libntl.a.zip 
+root@vultr:/home/sunly/Downloads/IDASH2017-master/IDASH2017/lib/lib# cd ..
+root@vultr:/home/sunly/Downloads/IDASH2017-master/IDASH2017/lib# cd ..
+root@vultr:/home/sunly/Downloads/IDASH2017-master/IDASH2017# cd Default/
+root@vultr:/home/sunly/Downloads/IDASH2017-master/IDASH2017/Default# make clean 
+root@vultr:/home/sunly/Downloads/IDASH2017-master/IDASH2017/Default# make all
+
+Finished building target: iDASH2017
+ 
+root@vultr:/home/sunly/Downloads/IDASH2017-master/IDASH2017/Default# 
+
 ```
 
 
