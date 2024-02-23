@@ -18,13 +18,10 @@ int main(int argc, char **argv) {
 
 	long numIter = 35;
 
-	//string trainfile = "../data/MNISTtrain3(+1)8(-1)with14x14x1579.txt";
-	//string testfile = "../data/MNISTt10k3(+1)8(-1)with14x14.txt";
-	
-	//string trainfile = "../data/MNISTtrain3(+1)8(-1)with14x14.csv";
-	//string testfile = "../data/MNISTt10k3(+1)8(-1)with14x14.csv";
-	string trainfile = "../data/data103x1579foreFourFifths.txt";
-	string testfile = "../data/data103x1579rearOneFifth.txt";
+	//string trainfile = "../data/Credit_train.csv";
+	//string testfile = "../data/Credit_test.csv";
+	string trainfile = "../data/MNIST_train.txt";
+	string testfile = "../data/MNIST_test.txt";
 
 	long trainSampleDim = 0, testSampleDim = 0, trainfactorDim = 0,	testfactorDim = 0;
 	double **traindataset, **testdataset;
@@ -43,11 +40,11 @@ int main(int argc, char **argv) {
 
 	string pathNesterovAGwithXTXasG =     "../result/20201123_FGCS";
 
-		   //pathNesterovAGwithXTXasG.append("_MNIST_train_t10k");
-		   pathNesterovAGwithXTXasG.append("_IDASH_fore.8_rear.2");
+		   //pathNesterovAGwithXTXasG.append("_MNIST");
+		   pathNesterovAGwithXTXasG.append("_Credit");
 		   
-	//pathNesterovAGwithXTXasG.append("_MiniBatchNAGG_");
-	pathNesterovAGwithXTXasG.append("_FullBatchNAGG_");
+	//pathNesterovAGwithXTXasG.append("_MiniBatch_");
+	pathNesterovAGwithXTXasG.append("_FullBatch_");
 
 	// Step 1. clear the former result data stored in the four*3(AUC,MLE,TIME) different files.
 	// SHOULD BE IN CONSSITENT WITH THE FILE PATH IN THE EACH ALGORITHM ! eg. "TrainAUC.csv"...

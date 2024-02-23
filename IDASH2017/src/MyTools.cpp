@@ -169,6 +169,87 @@ double** MyTools::dataFromFile(string& path, long& factorDim, long& sampleDim, d
 
 	return zData;
 }
+
+double** MyTools::zInvBFromFile(double **zDataTrain, long& factorDim, long& sampleDim, bool isfirst, double epsilon) {
+	vector<vector<double>> zline;
+
+	double** zData =  new double*[sampleDim];;
+	double** zInvB =  new double*[sampleDim];;
+	if(isfirst) {
+		for(long j = 0; j < sampleDim; ++j){
+			double* zj = new double[factorDim];
+			double* Bj = new double[factorDim];
+			for(long i = 0; i < factorDim; ++i){
+				zj[i] = std::abs(zDataTrain[j][i]);
+				Bj[i] = std::abs(zDataTrain[j][i]);
+			}
+			zData[j] = zj;
+			zInvB[j] = Bj;
+		}
+
+		for(long j = 0; j < sampleDim; ++j){
+			for(long i = 1; i < factorDim; ++i){
+				zInvB[j][0] += zInvB[j][i];
+			}
+		}
+
+		for(long j = 0; j < sampleDim; ++j){
+			for(long i = 1; i < factorDim; ++i){
+				zInvB[j][i] = zInvB[j][0];
+			}
+		}
+
+		for(long j = 0; j < sampleDim; ++j){
+			for(long i = 0; i < factorDim; ++i){
+				zInvB[j][i] *= zData[j][i];
+			}
+		}
+
+		for(long i = 0; i < factorDim; ++i){
+			for(long j = 1; j < sampleDim; ++j){
+				zInvB[0][i] += zInvB[j][i];
+			}
+		}
+
+		for(long i = 0; i < factorDim; ++i){
+			for(long j = 1; j < sampleDim; ++j){
+				zInvB[j][i] = zInvB[0][i];
+			}
+		}
+
+		for(long i = 0; i < factorDim; ++i){
+			for(long j = 0; j < sampleDim; ++j){
+				zInvB[j][i] = 1.0 / (epsilon + .25 * zInvB[j][i]);
+			}
+		}
+
+		return zInvB;
+
+	} else {
+		cout << "THIS SHOULD NOT HAPPEN !" << endl;
+		for(long j = 0; j < sampleDim; ++j){
+			double* zj = new double[factorDim];
+			zj[0] = 2 * zline[j][factorDim - 1] - 1;
+			for(long i = 1; i < factorDim; ++i){
+				zj[i] = zj[0] * zline[j][i-1];
+			}
+			zData[j] = zj;
+		}
+		return zData;
+	}
+	
+}
+
+void MyTools::printData(double** zData, long factorDim, long sampleDim) {
+	for (long i = 0; i < (sampleDim>2?2:sampleDim); ++i) {
+		cout << "The " << std::setw(3) << i << "-th Row:";
+		for (long j = 0; j < factorDim; ++j) {
+			cout << std::showpos << std::fixed << std::setw(12)  << zData[i][j] ;
+		}
+		cout << endl << endl;
+	}
+}
+
 /**
  * Shuffle the order of each row in zData.
  * @param  : zData 
