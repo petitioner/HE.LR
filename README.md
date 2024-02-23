@@ -6,23 +6,18 @@
 # How to run it:
 ```cpp        
 Step 0: Clone the GitHub Repository
-
 Execute the following command in the command line to clone the GitHub repository named HE.LR:
-
-bash
-Copy code
 git clone https://github.com/petitioner/HE.LR
+
 Step 1: Rename the Repository
-
 Use the mv command to rename the cloned repository to IDASH2017-master:
-
-bash
-Copy code
 mv HE.LR IDASH2017-master
-Step 2: Place IDASH2017-master in the Correct Directory
 
+Step 2: Place IDASH2017-master in the Correct Directory
 Place the IDASH2017-master repository in the specified directory to align with /home/sunly/Downloads/IDASH2017-master/IDASH2017/lib/lib.
 ```
+
+
 ---
 
 # Privacy-Preserving Logistic Regression Training on Large Datasets 
