@@ -59,7 +59,7 @@ CPP_DEPS += \
 HEAAN/HEAAN/src/%.o: ../HEAAN/HEAAN/src/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -I"/home/tree/Downloads/IDASH2017-master/IDASH2017/HEAAN/HEAAN/src" -I"/home/tree/Downloads/IDASH2017-master/IDASH2017/lib/include" -O2 -g -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	g++ -I"/home/sunly/Downloads/IDASH2017-master/IDASH2017/HEAAN/HEAAN/src" -I"/home/sunly/Downloads/IDASH2017-master/IDASH2017/lib/include" -O2 -g -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
