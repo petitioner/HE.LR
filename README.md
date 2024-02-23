@@ -40,7 +40,7 @@ root@vultr:/home/sunly/Downloads/IDASH2017-master/IDASH2017/Default# make all
 
 Finished building target: iDASH2017
  
-root@vultr:/home/sunly/Downloads/IDASH2017-master/IDASH2017/Default# 
+root@vultr:/home/sunly/Downloads/IDASH2017-master/IDASH2017/Default# ./iDASH2017 
 
 ```
 
