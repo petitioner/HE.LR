@@ -277,15 +277,12 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 		}
 		auto zTemp = MyTools::zInvBFromFile(zInvB, factorDim, restrows);
 
-		cout << endl << endl << endl << endl;
-MyTools::printData(zTemp, factorDim, 5);
-exit(0);
 		for (long i = 0; i < restrows; ++i) {
 			for(long j = 0; j < factorDim; ++j)
 				Binv[(rnum-1)*minbatchsize + i][j] = zTemp[i][j];
 		}
 		delete[] zInvB;
-		delete[] zTemp;exit(0);
+		delete[] zTemp;
 	timeutils.start("Encrypting Binv...");
 	// encrypt the traindata
 	for (long r = 0; r < rnum - 1; ++r) {
