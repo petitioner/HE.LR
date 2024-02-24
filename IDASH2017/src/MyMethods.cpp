@@ -201,7 +201,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
     // The last min-batch may consists of several ( trainSampleDim - minbatchsize * (rnum-1) ) rows of zeors.
 
         // r == rnum - 1       - the last rnum (the last min-batch)
-    	restrownum = trainSampleDim - minbatchsize * (rnum-1);
+    	auto restrownum = trainSampleDim - minbatchsize * (rnum-1);
 		for (long i = 0; i < cnum - 1; ++i) {			
 
 			complex<double>* pzData = new complex<double>[slots];
@@ -220,27 +220,27 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 			scheme.encrypt(encXyZdata[(rnum - 1)*cnum+i], pzData, slots, wBits, logQ);
 		}
 			// i == cnum - 1       - the last cnum in each row
-			complex<double>* pzData = new complex<double>[slots];
+			complex<double>* pzDatra = new complex<double>[slots];
 			for (long j = 0; j < restrownum; ++j) {
 				long rest = factorDim - batch * (cnum - 1);
 				for (long l = 0; l < rest; ++l) {
-					pzData[batch * j + l].real(trainlabel[(rnum-1)*minbatchsize + j]*traindata[(rnum-1)*minbatchsize + j][batch * (cnum - 1) + l]);
-					pzData[batch * j + l].imag(0);
+					pzDatra[batch * j + l].real(trainlabel[(rnum-1)*minbatchsize + j]*traindata[(rnum-1)*minbatchsize + j][batch * (cnum - 1) + l]);
+					pzDatra[batch * j + l].imag(0);
 				}
 				for (long l = rest; l < batch; ++l) {
-					pzData[batch * j + l].real(0);
-					pzData[batch * j + l].imag(0);
+					pzDatra[batch * j + l].real(0);
+					pzDatra[batch * j + l].imag(0);
 				}
 			}
 			for (long j = restrownum; j < minbatchsize; ++j) {
 				//long rest = factorDim - batch * (cnum - 1);
 				for (long l = 0; l < batch; ++l) {
-					pzData[batch * j + l].real(0);
-					pzData[batch * j + l].imag(0);
+					pzDatra[batch * j + l].real(0);
+					pzDatra[batch * j + l].imag(0);
 				}
 			}
-			scheme.encrypt(encXyZdata[(rnum - 1)*cnum+ cnum-1], pzData, slots, wBits, logQ);
-			delete[] pzData;
+			scheme.encrypt(encXyZdata[(rnum - 1)*cnum+ cnum-1], pzDatra, slots, wBits, logQ);
+			delete[] pzDatra;
 	timeutils.stop("encXyZdata encryption");
 
 	openFileTIME<<","<<timeutils.timeElapsed;  openFileTIME.flush();
@@ -260,10 +260,6 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 		}
 		auto zTemp = MyTools::zInvBFromFile(zInvB, factorDim, minbatchsize);
 
-cout << endl << endl << endl << endl;
-MyTools::printData(zInvB, factorDim, minbatchsize);
-exit(0);
-
 		for (long i = 0; i < minbatchsize; ++i) {
 			for(long j = 0; j < factorDim; ++j)
 				Binv[r*minbatchsize + i][j] = zTemp[i][j];
@@ -280,12 +276,16 @@ exit(0);
 			zInvB[i] = Bj;
 		}
 		auto zTemp = MyTools::zInvBFromFile(zInvB, factorDim, restrows);
+
+		cout << endl << endl << endl << endl;
+MyTools::printData(zTemp, factorDim, 5);
+exit(0);
 		for (long i = 0; i < restrows; ++i) {
 			for(long j = 0; j < factorDim; ++j)
 				Binv[(rnum-1)*minbatchsize + i][j] = zTemp[i][j];
 		}
 		delete[] zInvB;
-		delete[] zTemp;
+		delete[] zTemp;exit(0);
 	timeutils.start("Encrypting Binv...");
 	// encrypt the traindata
 	for (long r = 0; r < rnum - 1; ++r) {
@@ -301,20 +301,20 @@ exit(0);
 			scheme.encrypt(encBinv[r*cnum+i], pzData, slots, wBits, logQ);
 		}
 			// i == cnum - 1       - the last cnum in each row
-			complex<double>* pzData = new complex<double>[slots];
+			complex<double>* pzData3 = new complex<double>[slots];
 			for (long j = 0; j < minbatchsize; ++j) {
 				long rest = factorDim - batch * (cnum - 1);
 
 				for (long l = 0; l < rest; ++l) {
-					pzData[batch * j + l].real(Binv[r*minbatchsize + j][batch * (cnum - 1) + l]);
-					pzData[batch * j + l].imag(0);
+					pzData3[batch * j + l].real(Binv[r*minbatchsize + j][batch * (cnum - 1) + l]);
+					pzData3[batch * j + l].imag(0);
 				}
 				for (long l = rest; l < batch; ++l) {
-					pzData[batch * j + l].real(0);
-					pzData[batch * j + l].imag(0);
+					pzData3[batch * j + l].real(0);
+					pzData3[batch * j + l].imag(0);
 				}
 			}
-			scheme.encrypt(encBinv[r*cnum+ cnum-1], pzData, slots, wBits, logQ);
+			scheme.encrypt(encBinv[r*cnum+ cnum-1], pzData3, slots, wBits, logQ);
 
     }
     // The last min-batch may consists of several ( trainSampleDim - minbatchsize * (rnum-1) ) rows of zeors.
@@ -339,27 +339,27 @@ exit(0);
 			scheme.encrypt(encBinv[(rnum - 1)*cnum+i], pzData, slots, wBits, logQ);
 		}
 			// i == cnum - 1       - the last cnum in each row
-			complex<double>* pzData = new complex<double>[slots];
+			complex<double>* pzData7 = new complex<double>[slots];
 			for (long j = 0; j < restrownum; ++j) {
 				long rest = factorDim - batch * (cnum - 1);
 				for (long l = 0; l < rest; ++l) {
-					pzData[batch * j + l].real(Binv[(rnum-1)*minbatchsize + j][batch * (cnum - 1) + l]);
-					pzData[batch * j + l].imag(0);
+					pzData7[batch * j + l].real(Binv[(rnum-1)*minbatchsize + j][batch * (cnum - 1) + l]);
+					pzData7[batch * j + l].imag(0);
 				}
 				for (long l = rest; l < batch; ++l) {
-					pzData[batch * j + l].real(0);
-					pzData[batch * j + l].imag(0);
+					pzData7[batch * j + l].real(0);
+					pzData7[batch * j + l].imag(0);
 				}
 			}
 			for (long j = restrownum; j < minbatchsize; ++j) {
 				//long rest = factorDim - batch * (cnum - 1);
 				for (long l = 0; l < batch; ++l) {
-					pzData[batch * j + l].real(0);
-					pzData[batch * j + l].imag(0);
+					pzData7[batch * j + l].real(0);
+					pzData7[batch * j + l].imag(0);
 				}
 			}
-			scheme.encrypt(encBinv[(rnum - 1)*cnum+ cnum-1], pzData, slots, wBits, logQ);
-			delete[] pzData;
+			scheme.encrypt(encBinv[(rnum - 1)*cnum+ cnum-1], pzData7, slots, wBits, logQ);
+			delete[] pzData7;
 	timeutils.stop("Binv encryption");
 
 	openFileTIME<<","<<timeutils.timeElapsed;  openFileTIME.flush();
