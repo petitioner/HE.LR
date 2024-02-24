@@ -174,8 +174,8 @@ double** MyTools::dataFromFile(string& path, long& factorDim, long& sampleDim, d
 double** MyTools::zInvBFromFile(double **zDataTrain, long& factorDim, long& sampleDim, bool isfirst, double epsilon) {
 	vector<vector<double>> zline;
 
-	double** zData =  new double*[sampleDim];;
-	double** zInvB =  new double*[sampleDim];;
+	double** zData =  new double*[sampleDim];
+	double** zInvB =  new double*[sampleDim];
 	if(isfirst) {
 		for(long j = 0; j < sampleDim; ++j){
 			double* zj = new double[factorDim];
@@ -328,9 +328,12 @@ void MyTools::normalizeZData(double** zData, long factorDim, long sampleDim) {
 		}
 
 		for (long j = 0; j < sampleDim; ++j) {
-			if (colmax - colmin < 1e-10 )  
-				zData[j][i] = 0.5;
-			else 
+			if (colmax - colmin < 1e-10) {
+				if (colmin < 0 && 1 < colmax)  
+					zData[j][i] = 0.5;
+				else
+					zData[j][i] = colmin;
+			}else 
 				zData[j][i] = float(zData[j][i] - colmin) / (colmax - colmin) ;
 		}
 	}
