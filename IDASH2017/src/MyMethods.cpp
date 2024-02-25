@@ -538,6 +538,16 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 // }
 // exit(0);
 
+//  SO FAR SO GOOD
+MyTools::printData(traindata, factorDim, 1) ;
+cout << endl << trainlabel[0] << endl;
+cout << endl;cout << endl;cout << endl;cout << endl;cout << endl;
+complex<double>* dcvxv = scheme.decrypt(secretKey, encIP);
+for (long i = 0; i < minbatchsize; ++i) {
+	for (long j = 0; j < batch; ++j)
+		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[i*batch + j].real() << "\t";
+	cout << endl << "+++++++" << endl << endl;
+}
 
 				Ciphertext* encGrad = new Ciphertext[cnum];
 
@@ -554,12 +564,19 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 						cout << endl << "INSIDE iter < 5;  poly3 = ";
 						cout << setiosflags(ios::showpos) << degree3[0] << " ";
 						cout << setiosflags(ios::showpos) << degree3[1] << "x ";
-						cout << setiosflags(ios::showpos) << degree3[2] << "x^3 " << endl << "gamma = " << gamma << endl << endl;
+						cout << setiosflags(ios::showpos) << degree3[2] << "x^3 " << endl << endl;
 						cout << std::noshowpos;
+						cout << "gamma = " << gamma << endl << endl << endl;
 
 
 						scheme.addConstAndEqual(encIP2, degree3[1] / degree3[2], encIP2.logp);                // encIP2 = a/b + yWTx*yWTx
-
+dcvxv = scheme.decrypt(secretKey, encBinv[0]);
+for (long i = 0; i < minbatchsize; ++i) {
+	for (long j = 0; j < batch; ++j)
+		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[i*batch + j].real() << "\t";
+	cout << endl << "+++++++" << endl << endl;
+}
+exit(0);
 
 						NTL_EXEC_RANGE(cnum, first, last);
 						//long first = 0, last = cnum;
@@ -631,6 +648,15 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 				/* CipherGD::encSigmoid(kdeg, encZData, encGrad, encIP, cnum, gamma, sBits, bBits, wBits, aBits); */
 
 
+
+for(long i = 0; i < cnum; ++i) {
+	complex<double>* dcvxv = scheme.decrypt(secretKey, encGrad[i]);
+	for (long j = 0; j < batch; ++j)
+		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[ j].real() << "\t";
+	delete[] dcvxv;
+}
+//problems occured here!
+exit(0);
 				/* CipherGD::encNLGDstep(encWData, encVData, encGrad, eta, cnum, pBits); */
 					NTL_EXEC_RANGE(cnum, first, last);
 					for (long i = first; i < last; ++i) {
