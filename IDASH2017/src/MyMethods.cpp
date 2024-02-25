@@ -601,20 +601,6 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 						NTL_EXEC_RANGE_END;
 					/* END OF if(kdeg == 3) {  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 
-
-MyTools::printData(traindata, factorDim, 1) ;
-cout << endl << trainlabel[0] << endl;
-cout << endl;cout << endl;cout << endl;cout << endl;cout << endl;
-
-for (long i = 0; i < cnum; ++i) {
-	complex<double>* dcvxv = scheme.decrypt(secretKey, encGrad[i]);
-	for (long j = 0; j < batch; ++j)
-		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[j].real() << "\t";
-	
-	delete[] dcvxv;
-}
-exit(0);
-
 					
 						encIP2.kill();
 						encIP.kill();
@@ -628,14 +614,14 @@ exit(0);
 							scheme.addAndEqual(encGrad[i], tmp);
 						}
 
-						Ciphertext ctBinv(encBinv[randr[r]*cnum+i]);
+						Ciphertext ctBinv(encBinv[r*cnum+i]); ////~~~~~~//~~~~~~//~~~~~~//~~~~~~//~~~~~~//~~~~~~//~~~~~~
 						if (encGrad[i].logq > ctBinv.logq)
 							scheme.modDownToAndEqual(encGrad[i], ctBinv.logq);
 						if (encGrad[i].logq < ctBinv.logq)
 							scheme.modDownToAndEqual(ctBinv, encGrad[i].logq);
 
-						scheme.multAndEqual(encGrad[i], encBinv[randr[r]*cnum+i]);
-						scheme.reScaleByAndEqual(encGrad[i], encBinv[randr[r]*cnum+i].logp);
+						scheme.multAndEqual(encGrad[i], encBinv[r*cnum+i]);
+						scheme.reScaleByAndEqual(encGrad[i], encBinv[r*cnum+i].logp);
 
 						tmp.kill();
 						ctBinv.kill();
