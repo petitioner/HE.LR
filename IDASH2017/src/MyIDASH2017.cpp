@@ -83,7 +83,6 @@ int main(int argc, char **argv) {
 			trainlabel[i] = traindatalabel[i];
 		}
 
-
 		cout << "MyMethods::testCryptoMiniBatchNAGwithG(" << endl;
 		cout << "trainfile : " << trainfile << endl;
 		cout << "testfile  : " << testfile << endl;

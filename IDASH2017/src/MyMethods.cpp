@@ -367,9 +367,6 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 
 
 
-
-
-
 	// zDataTrain and zDataTest are used for testing in the plaintext environment 
 	// zData = (Y,Y@X)
 	double** zDataTrain = new double*[trainSampleDim];
@@ -557,7 +554,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 						cout << endl << "INSIDE iter < 5;  poly3 = ";
 						cout << setiosflags(ios::showpos) << degree3[0] << " ";
 						cout << setiosflags(ios::showpos) << degree3[1] << "x ";
-						cout << setiosflags(ios::showpos) << degree3[2] << "x^3 " << endl << endl;
+						cout << setiosflags(ios::showpos) << degree3[2] << "x^3 " << endl << "gamma = " << gamma << endl << endl;
 						cout << std::noshowpos;
 
 
@@ -568,7 +565,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 						//long first = 0, last = cnum;
 						for (long i = first; i < last; ++i) {
 
-							scheme.multByConst(encGrad[i], encZData[i], (1+gamma)  * degree3[2], wBits+pBits);
+							scheme.multByConst(encGrad[i], encZData[i], (gamma)  * degree3[2], wBits+pBits);
 
 							scheme.reScaleByAndEqual(encGrad[i], pBits);                             // encGrad = Y@X *gamma * b
 
@@ -591,7 +588,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 							scheme.reScaleByAndEqual(encGrad[i], ctIP2.logp);
 
 							Ciphertext tmp;
-							scheme.multByConst(tmp, encZData[i], (1+gamma)  * degree3[0], wBits);         // tmp = Y@X * gamma * 0.5
+							scheme.multByConst(tmp, encZData[i], (gamma)  * degree3[0], wBits);         // tmp = Y@X * gamma * 0.5
 
 							scheme.modDownToAndEqual(tmp, encGrad[i].logq);  // encGrad[i].logq == tmp.logq
 
@@ -605,6 +602,18 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 					/* END OF if(kdeg == 3) {  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 
 
+MyTools::printData(traindata, factorDim, 1) ;
+cout << endl << trainlabel[0] << endl;
+cout << endl;cout << endl;cout << endl;cout << endl;cout << endl;
+
+for (long i = 0; i < cnum; ++i) {
+	complex<double>* dcvxv = scheme.decrypt(secretKey, encGrad[i]);
+	for (long j = 0; j < batch; ++j)
+		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[j].real() << "\t";
+	
+	delete[] dcvxv;
+}
+exit(0);
 
 					
 						encIP2.kill();

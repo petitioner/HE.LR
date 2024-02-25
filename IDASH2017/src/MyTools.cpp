@@ -242,7 +242,7 @@ double** MyTools::zInvBFromFile(double **zDataTrain, long& factorDim, long& samp
 }
 
 void MyTools::printData(double** zData, long factorDim, long sampleDim) {
-	for (long i = 0; i < (sampleDim); ++i) {
+	for (long i = (sampleDim>5?sampleDim-4:0); i < (sampleDim); ++i) {
 		cout << "The " << std::setw(3) << i << "-th Row:";
 		for (long j = 0; j < factorDim; ++j) {
 			cout << std::showpos << std::fixed << std::setw(20)  << zData[i][j] ;
