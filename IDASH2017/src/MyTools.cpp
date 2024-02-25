@@ -328,14 +328,13 @@ void MyTools::normalizeZData(double** zData, long factorDim, long sampleDim) {
 		}
 
 		for (long j = 0; j < sampleDim; ++j) {
-//			if (colmax - colmin < 1e-10) {
-//				if (colmin < 0 && 1 < colmax)  
-//					zData[j][i] = 0.5;
-//				else
-//					zData[j][i] = colmin;
-//			}else 
-//				zData[j][i] = float(zData[j][i] - colmin) / (colmax - colmin) ;
-			zData[j][i] = zData[j][i] / 255;
+			if (colmax - colmin < 1e-10) {
+				if (colmin <= 0 )  
+					zData[j][i] = 0.0;
+				if(1 <= colmax)
+					zData[j][i] = 1.0;
+			}else 
+				zData[j][i] = float(zData[j][i] - colmin) / (colmax - colmin) ;			
 
 			
 		}

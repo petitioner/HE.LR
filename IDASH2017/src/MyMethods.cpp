@@ -249,6 +249,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 	openFilePeakMEM<<","<< ( MyTools::getPeakRSS() >> 20 );  openFilePeakMEM.flush();
 
 
+
 	double** Binv = MyTools::zInvBFromFile(traindata, factorDim, trainSampleDim);
 	for (long r = 0; r < rnum-1; ++r) {
 		double** zInvB =  new double*[minbatchsize];
@@ -398,7 +399,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 	NTL_EXEC_RANGE(cnum, first, last);
 	for (long i = first; i < last; ++i) {
 		// scheme.encryptZeros(encWData[i], slots, wBits, encZData[0].logq); // To Make encVData[0].logq==encZData[0].logq
-		scheme.encryptSingle(encWData[i], 0.0, wBits, logQ);
+		scheme.encryptSingle(encWData[i], 0.123, wBits, logQ);
 		encWData[i].n = slots;
 
 		encVData[i].copy(encWData[i]);
@@ -426,7 +427,12 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 
 	alpha0 = 0.01;
 	alpha1 = (1. + sqrt(1. + 4.0 * alpha0 * alpha0)) / 2.0;
-
+    //CyclicLR
+    double base_lr = 0.20;
+    double max_lr  = 2.00;
+    long step_size = 64;
+    // string mode = 'exp_range'
+    double clr_gamma = 0.9;
 	for (long iter = 0; iter < numIter; ++iter) {
 			
 		vector<int> randr;
@@ -441,9 +447,14 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 			timeutils.start("NesterovWithGminBatch : "+ to_string(iter+1)+" -th iteration");
 
 			eta = (1 - alpha0) / alpha1;
-			double gamma = 1.0 / minbatchsize / (1 + iter + r);
-			if (trainSampleDim % minbatchsize != 0 && randr[r] == rnum-1)
-				gamma = 1.0 / (trainSampleDim % minbatchsize) / (1 + iter + r);
+        
+
+			auto iterations = iter*rnum + r;
+        	auto cycle = floor(1 + iterations / (2 * step_size));
+        	auto x = abs(iterations / step_size - 2 * cycle + 1);
+			//base_lr + (max_lr - base_lr) * max(0, (1 - x)) *clrgamma**(iterations)
+			auto gamma = base_lr + (max_lr - base_lr) * max(0., (1 - x)) * pow(clr_gamma, iterations);
+
 
 			cout << endl << endl;
 			cout << " ----------------- the " << (iter+1) << "-th epoch ----------------- " << endl;
@@ -456,7 +467,8 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 			// To Get the encZData
 			NTL_EXEC_RANGE(cnum, first, last);
 			for(long i = first; i < last; ++i){
-				encZData[i].copy(encXyZdata[cnum*randr[r] + i]);
+				//encZData[i].copy(encXyZdata[randr[r] * cnum + i]);
+				encZData[i].copy(encXyZdata[r * cnum + i]);
 			}
 			NTL_EXEC_RANGE_END
 			//timeutils.stop("encZData[i] for i in range(cnum) is done");
@@ -482,6 +494,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 						// V is the final weights to store the result weights.
 						scheme.multAndEqual(encIPvec[i], encVData[i]);                // encIPvec = ENC(zData) .* ENC(V)
 
+
 						/* For Each Batch (==ciphertext), Sum Itself Inside, Result in Each Row consisting of the same value */
 						Ciphertext rot;                                               // encIPvec = ENC(zData) @  ENC(V)
 						for (long l = 0; l < bBits; ++l) {
@@ -489,6 +502,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 							scheme.addAndEqual(encIPvec[i], rot);
 						}
 						rot.kill();
+
 					}
 					NTL_EXEC_RANGE_END
 
@@ -514,6 +528,19 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 					for(long i=0; i<cnum; ++i) encIPvec[i].kill();
 					delete[] encIPvec;
 				 //CipherGD::encInnerProduct(encIP, encZData, encVData, rpoly, cnum, bBits, wBits, pBits); 
+
+
+// MyTools::printData(traindata, factorDim, 1) ;
+// cout << endl << trainlabel[0] << endl;
+// cout << endl;cout << endl;cout << endl;cout << endl;cout << endl;
+// complex<double>* dcvxv = scheme.decrypt(secretKey, encIP);
+// for (long i = 0; i < minbatchsize; ++i) {
+// 	for (long j = 0; j < batch; ++j)
+// 		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[i*batch + j].real() << "\t";
+// 	cout << endl;
+// }
+// exit(0);
+
 
 				Ciphertext* encGrad = new Ciphertext[cnum];
 
