@@ -577,6 +577,8 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 						NTL_EXEC_RANGE_END;
 					/* END OF if(kdeg == 3) {  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 
+
+
 					
 						encIP2.kill();
 						encIP.kill();

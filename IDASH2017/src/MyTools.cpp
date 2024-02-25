@@ -336,6 +336,8 @@ void MyTools::normalizeZData(double** zData, long factorDim, long sampleDim) {
 //			}else 
 //				zData[j][i] = float(zData[j][i] - colmin) / (colmax - colmin) ;
 			zData[j][i] = zData[j][i] / 255;
+
+			
 		}
 	}
 }
