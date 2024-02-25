@@ -35,7 +35,8 @@ int main(int argc, char **argv) {
 		exit(-1);
 	}
 
-
+//MNIST /255
+//Credit   min, max 
 	MyTools::normalizeZData(traindataset, trainfactorDim, trainSampleDim);
 	MyTools::normalizeZData(testdataset, testfactorDim, testSampleDim);
 

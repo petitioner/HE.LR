@@ -456,9 +456,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 			// To Get the encZData
 			NTL_EXEC_RANGE(cnum, first, last);
 			for(long i = first; i < last; ++i){
-				encZData[i].copy(encTrainLabel[cnum*randr[r] + i]);
-				scheme.multAndEqual(encZData[i], encTrainData[cnum*randr[r] + i]);
-				scheme.reScaleByAndEqual(encZData[i], encTrainData[cnum*randr[r] + i].logp);
+				encZData[i].copy(encXyZdata[cnum*randr[r] + i]);
 			}
 			NTL_EXEC_RANGE_END
 			//timeutils.stop("encZData[i] for i in range(cnum) is done");
@@ -528,284 +526,58 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 						scheme.reScaleByAndEqual(encIP2, encIP.logp);                // For now, encIP.logp is big enough
 
 
-						if( iter * rnum  + r < 12 ){
-							//////////////////////////////////////// when iteration < 05 ////////////////////////////////////////
-							cout << endl << "INSIDE iter < 12; poly7 = ";
-							cout << setiosflags(ios::showpos) << degree7_12[0] << " ";
-							cout << setiosflags(ios::showpos) << degree7_12[1] << "x " ;
-							cout << setiosflags(ios::showpos) << degree7_12[2] << "x^3 ";
-							cout << setiosflags(ios::showpos) << degree7_12[3] << "x^5 ";
-							cout << setiosflags(ios::showpos) << degree7_12[4] << "x^7 " << endl << endl;
-							cout << std::noshowpos;
+						//////////////////////////////////////// when iteration < 05 ////////////////////////////////////////
+						cout << endl << "INSIDE iter < 5;  poly3 = ";
+						cout << setiosflags(ios::showpos) << degree3[0] << " ";
+						cout << setiosflags(ios::showpos) << degree3[1] << "x ";
+						cout << setiosflags(ios::showpos) << degree3[2] << "x^3 " << endl << endl;
+						cout << std::noshowpos;
 
-							Ciphertext encIP4;
-							scheme.square(encIP4, encIP2);
-							scheme.reScaleByAndEqual(encIP4, encIP2.logp);
 
-							Ciphertext encIP2c;
-							scheme.multByConst(encIP2c, encIP2, degree7_12[3] / degree7_12[4], wBits);
-							scheme.reScaleByAndEqual(encIP2c, wBits);
+						scheme.addConstAndEqual(encIP2, degree3[1] / degree3[2], encIP2.logp);                // encIP2 = a/b + yWTx*yWTx
 
-							if(encIP4.logp != encIP2c.logp) {cout<<"encIP4.logp!=encIP2c.logp"; exit(0); }
-							if(encIP4.logq > encIP2c.logq) scheme.modDownToAndEqual(encIP4, encIP2c.logq);
-							if(encIP4.logq < encIP2c.logq) scheme.modDownToAndEqual(encIP2c, encIP4.logq);
-							scheme.addAndEqual(encIP4, encIP2c);
 
-							//scheme.addConstAndEqual(encIP4, degree7[2] / degree7[4], wBits + 10);
-							scheme.addConstAndEqual(encIP4, degree7_12[2] / degree7_12[4], encIP4.logp);
+						NTL_EXEC_RANGE(cnum, first, last);
+						//long first = 0, last = cnum;
+						for (long i = first; i < last; ++i) {
 
-							NTL_EXEC_RANGE(cnum, first, last);
-							for (long i = first; i < last; ++i) {
-								Ciphertext tmp;
-								scheme.multByConst(tmp, encZData[i], (1+gamma)  * degree7_12[1], wBits);
+							scheme.multByConst(encGrad[i], encZData[i], (1+gamma)  * degree3[2], wBits+pBits);
 
-								scheme.modDownToAndEqual(tmp, encIP.logq);
+							scheme.reScaleByAndEqual(encGrad[i], pBits);                             // encGrad = Y@X *gamma * b
 
-								if(tmp.logq != encIP.logq) {cout << "$$#$$" << endl;exit(0);}
 
-								scheme.multAndEqual(tmp, encIP);
-								scheme.reScaleByAndEqual(tmp, encIP.logp);
+							Ciphertext ctIP(encIP);
+							if (encGrad[i].logq > ctIP.logq)
+								scheme.modDownToAndEqual(encGrad[i], ctIP.logq);     /* whose logq should be ... */
+							if (encGrad[i].logq < ctIP.logq)
+								scheme.modDownToAndEqual(ctIP, encGrad[i].logq);
 
-								//////////////////////////////////////////////////////////////////////////////
-								scheme.multByConst(encGrad[i], encZData[i], (1+gamma)  * degree7_12[0], wBits);
-								//scheme.reScaleByAndEqual(encGrad[i], pBits);
-								if(tmp.logp > encGrad[i].logp) scheme.reScaleByAndEqual(tmp,tmp.logp-encGrad[i].logp);
-								if(tmp.logp < encGrad[i].logp) scheme.reScaleByAndEqual(encGrad[i], encGrad[i].logp-tmp.logp);
+							scheme.multAndEqual(encGrad[i], ctIP);                                  // encGrad = gamma * Y@X * b * yWTx
+							scheme.reScaleByAndEqual(encGrad[i], ctIP.logp);
 
-								if(tmp.logq > encGrad[i].logq) scheme.modDownToAndEqual(tmp, encGrad[i].logq);
-								if(tmp.logq < encGrad[i].logq) scheme.modDownToAndEqual(encGrad[i], tmp.logq);
+							Ciphertext ctIP2(encIP2);
+							if(encGrad[i].logq > ctIP2.logq)
+								scheme.modDownToAndEqual(encGrad[i], ctIP2.logq);
+							if(encGrad[i].logq < ctIP2.logq)
+								scheme.modDownToAndEqual(ctIP2, encGrad[i].logq);
+							scheme.multAndEqual(encGrad[i], ctIP2);                                 // encGrad = gamma * Y@X * (a * yWTx + b * yWTx ^3)
+							scheme.reScaleByAndEqual(encGrad[i], ctIP2.logp);
 
-								scheme.addAndEqual(tmp, encGrad[i]);
+							Ciphertext tmp;
+							scheme.multByConst(tmp, encZData[i], (1+gamma)  * degree3[0], wBits);         // tmp = Y@X * gamma * 0.5
 
-								//////////////////////////////////////////////////////////////////////////////
-								scheme.multByConst(encGrad[i], encZData[i], (1+gamma)  * degree7_12[4], wBits + wBits);
-								scheme.reScaleByAndEqual(encGrad[i], wBits);
+							scheme.modDownToAndEqual(tmp, encGrad[i].logq);  // encGrad[i].logq == tmp.logq
 
-								scheme.modDownToAndEqual(encGrad[i], encIP.logq);
+							scheme.addAndEqual(encGrad[i], tmp);                                     // encGrad = gamma * Y@X * (0.5 + a * yWTx + b * yWTx ^3)
 
-								scheme.multAndEqual(encGrad[i], encIP);
-
-								Ciphertext ctIP2(encIP2);
-								if(encGrad[i].logq > ctIP2.logq)
-									scheme.modDownToAndEqual(encGrad[i], ctIP2.logq);
-								if(encGrad[i].logq < ctIP2.logq)
-									scheme.modDownToAndEqual(ctIP2, encGrad[i].logq);
-								scheme.multAndEqual(encGrad[i], ctIP2);
-								scheme.reScaleByAndEqual(encGrad[i], ctIP2.logp);
-
-								Ciphertext ctIP4(encIP4);
-								if(encGrad[i].logq > ctIP4.logq)
-									scheme.modDownToAndEqual(encGrad[i], ctIP4.logq);
-								if(encGrad[i].logq < ctIP4.logq)
-									scheme.modDownToAndEqual(ctIP4, encGrad[i].logq);
-								scheme.multAndEqual(encGrad[i], encIP4);
-								scheme.reScaleByAndEqual(encGrad[i], ctIP4.logp);
-
-								if(tmp.logp > encGrad[i].logp) scheme.reScaleByAndEqual(tmp,tmp.logp-encGrad[i].logp);
-								if(tmp.logp < encGrad[i].logp) scheme.reScaleByAndEqual(encGrad[i], encGrad[i].logp-tmp.logp);
-								if(tmp.logq > encGrad[i].logq) scheme.modDownToAndEqual(tmp, encGrad[i].logq);
-								if(tmp.logq < encGrad[i].logq) scheme.modDownToAndEqual(encGrad[i], tmp.logq);
-								scheme.addAndEqual(encGrad[i], tmp);
-
-								tmp.kill();
-								ctIP2.kill();
-								ctIP4.kill();
-
-							}
-							NTL_EXEC_RANGE_END;
-
-							encIP4.kill();
-							encIP2c.kill();
-
-						}else if( iter * rnum  + r < 24 ){
-							//////////////////////////////////////// when iteration < 10 ////////////////////////////////////////
-							cout << endl << "INSIDE iter < 24; poly7 = ";
-							cout << setiosflags(ios::showpos) << degree7_24[0] << " ";
-							cout << setiosflags(ios::showpos) << degree7_24[1] << "x " ;
-							cout << setiosflags(ios::showpos) << degree7_24[2] << "x^3 ";
-							cout << setiosflags(ios::showpos) << degree7_24[3] << "x^5 ";
-							cout << setiosflags(ios::showpos) << degree7_24[4] << "x^7 " << endl << endl;
-							cout << std::noshowpos;
-
-							Ciphertext encIP4;
-							scheme.square(encIP4, encIP2);
-							scheme.reScaleByAndEqual(encIP4, encIP2.logp);
-
-							Ciphertext encIP2c;
-							scheme.multByConst(encIP2c, encIP2, degree7_24[3] / degree7_24[4], wBits);
-							scheme.reScaleByAndEqual(encIP2c, wBits);
-
-							if(encIP4.logp != encIP2c.logp) {cout<<"encIP4.logp!=encIP2c.logp"; exit(0); }
-							if(encIP4.logq > encIP2c.logq) scheme.modDownToAndEqual(encIP4, encIP2c.logq);
-							if(encIP4.logq < encIP2c.logq) scheme.modDownToAndEqual(encIP2c, encIP4.logq);
-							scheme.addAndEqual(encIP4, encIP2c);
-
-							//scheme.addConstAndEqual(encIP4, degree7[2] / degree7[4], wBits + 10);
-							scheme.addConstAndEqual(encIP4, degree7_24[2] / degree7_24[4], encIP4.logp);
-
-							NTL_EXEC_RANGE(cnum, first, last);
-							for (long i = first; i < last; ++i) {
-								Ciphertext tmp;
-								scheme.multByConst(tmp, encZData[i], (1+gamma)  * degree7_24[1], wBits);
-
-								scheme.modDownToAndEqual(tmp, encIP.logq);
-
-								if(tmp.logq != encIP.logq) {cout << "$$#$$" << endl;exit(0);}
-
-								scheme.multAndEqual(tmp, encIP);
-								scheme.reScaleByAndEqual(tmp, encIP.logp);
-
-								//////////////////////////////////////////////////////////////////////////////
-								scheme.multByConst(encGrad[i], encZData[i], (1+gamma)  * degree7_24[0], wBits);
-								//scheme.reScaleByAndEqual(encGrad[i], pBits);
-								if(tmp.logp > encGrad[i].logp) scheme.reScaleByAndEqual(tmp,tmp.logp-encGrad[i].logp);
-								if(tmp.logp < encGrad[i].logp) scheme.reScaleByAndEqual(encGrad[i], encGrad[i].logp-tmp.logp);
-
-								if(tmp.logq > encGrad[i].logq) scheme.modDownToAndEqual(tmp, encGrad[i].logq);
-								if(tmp.logq < encGrad[i].logq) scheme.modDownToAndEqual(encGrad[i], tmp.logq);
-
-								scheme.addAndEqual(tmp, encGrad[i]);
-
-								//////////////////////////////////////////////////////////////////////////////
-								scheme.multByConst(encGrad[i], encZData[i], (1+gamma)  * degree7_24[4], wBits + wBits);
-								scheme.reScaleByAndEqual(encGrad[i], wBits);
-
-								scheme.modDownToAndEqual(encGrad[i], encIP.logq);
-
-								scheme.multAndEqual(encGrad[i], encIP);
-
-								Ciphertext ctIP2(encIP2);
-								if(encGrad[i].logq > ctIP2.logq)
-									scheme.modDownToAndEqual(encGrad[i], ctIP2.logq);
-								if(encGrad[i].logq < ctIP2.logq)
-									scheme.modDownToAndEqual(ctIP2, encGrad[i].logq);
-								scheme.multAndEqual(encGrad[i], ctIP2);
-								scheme.reScaleByAndEqual(encGrad[i], ctIP2.logp);
-
-								Ciphertext ctIP4(encIP4);
-								if(encGrad[i].logq > ctIP4.logq)
-									scheme.modDownToAndEqual(encGrad[i], ctIP4.logq);
-								if(encGrad[i].logq < ctIP4.logq)
-									scheme.modDownToAndEqual(ctIP4, encGrad[i].logq);
-								scheme.multAndEqual(encGrad[i], encIP4);
-								scheme.reScaleByAndEqual(encGrad[i], ctIP4.logp);
-
-								if(tmp.logp > encGrad[i].logp) scheme.reScaleByAndEqual(tmp,tmp.logp-encGrad[i].logp);
-								if(tmp.logp < encGrad[i].logp) scheme.reScaleByAndEqual(encGrad[i], encGrad[i].logp-tmp.logp);
-								if(tmp.logq > encGrad[i].logq) scheme.modDownToAndEqual(tmp, encGrad[i].logq);
-								if(tmp.logq < encGrad[i].logq) scheme.modDownToAndEqual(encGrad[i], tmp.logq);
-								scheme.addAndEqual(encGrad[i], tmp);
-
-								tmp.kill();
-								ctIP2.kill();
-								ctIP4.kill();
-
-							}
-							NTL_EXEC_RANGE_END;
-
-							encIP4.kill();
-							encIP2c.kill();
-
-						}else{
-							//////////////////////////////////////// when iteration < 30 ////////////////////////////////////////
-							cout << endl << "INSIDE iter < 36; poly7 = ";
-							cout << setiosflags(ios::showpos) << degree7_36[0] << " ";
-							cout << setiosflags(ios::showpos) << degree7_36[1] << "x " ;
-							cout << setiosflags(ios::showpos) << degree7_36[2] << "x^3 ";
-							cout << setiosflags(ios::showpos) << degree7_36[3] << "x^5 ";
-							cout << setiosflags(ios::showpos) << degree7_36[4] << "x^7 " << endl << endl;
-							cout << std::noshowpos;
-
-							if(iter * rnum  + r > 30){
-								cout << endl << "THE NUMBER OF MAX ITERATION SHOULD BE LESS THAN 30!" << endl;
-								//exit(0);
-							}
-							if(iter * rnum  + r > 36){
-								cout << endl << "The Number of Max Iteration should be less than 35!" << endl;
-								cout << "otherwise, the poly7 should be replaced with a larger range poly!" << endl;
-								exit(0);
-							}
-
-							Ciphertext encIP4;
-							scheme.square(encIP4, encIP2);
-							scheme.reScaleByAndEqual(encIP4, encIP2.logp);
-
-							Ciphertext encIP2c;
-							scheme.multByConst(encIP2c, encIP2, degree7_36[3] / degree7_36[4], wBits);
-							scheme.reScaleByAndEqual(encIP2c, wBits);
-
-							if(encIP4.logp != encIP2c.logp) {cout<<"encIP4.logp!=encIP2c.logp"; exit(0); }
-							if(encIP4.logq > encIP2c.logq) scheme.modDownToAndEqual(encIP4, encIP2c.logq);
-							if(encIP4.logq < encIP2c.logq) scheme.modDownToAndEqual(encIP2c, encIP4.logq);
-							scheme.addAndEqual(encIP4, encIP2c);
-
-							//scheme.addConstAndEqual(encIP4, degree7[2] / degree7[4], wBits + 10);
-							scheme.addConstAndEqual(encIP4, degree7_36[2] / degree7_36[4], encIP4.logp);
-
-							NTL_EXEC_RANGE(cnum, first, last);
-							for (long i = first; i < last; ++i) {
-								Ciphertext tmp;
-								scheme.multByConst(tmp, encZData[i], (1+gamma)  * degree7_36[1], wBits);
-
-								scheme.modDownToAndEqual(tmp, encIP.logq);
-
-								if(tmp.logq != encIP.logq) {cout << "$$#$$" << endl;exit(0);}
-
-								scheme.multAndEqual(tmp, encIP);
-								scheme.reScaleByAndEqual(tmp, encIP.logp);
-
-								//////////////////////////////////////////////////////////////////////////////
-								scheme.multByConst(encGrad[i], encZData[i], (1+gamma)  * degree7_36[0], wBits);
-								//scheme.reScaleByAndEqual(encGrad[i], pBits);
-								if(tmp.logp > encGrad[i].logp) scheme.reScaleByAndEqual(tmp,tmp.logp-encGrad[i].logp);
-								if(tmp.logp < encGrad[i].logp) scheme.reScaleByAndEqual(encGrad[i], encGrad[i].logp-tmp.logp);
-
-								if(tmp.logq > encGrad[i].logq) scheme.modDownToAndEqual(tmp, encGrad[i].logq);
-								if(tmp.logq < encGrad[i].logq) scheme.modDownToAndEqual(encGrad[i], tmp.logq);
-
-								scheme.addAndEqual(tmp, encGrad[i]);
-
-								//////////////////////////////////////////////////////////////////////////////
-								scheme.multByConst(encGrad[i], encZData[i], (1+gamma)  * degree7_36[4], wBits + wBits);
-								scheme.reScaleByAndEqual(encGrad[i], wBits);
-
-								scheme.modDownToAndEqual(encGrad[i], encIP.logq);
-
-								scheme.multAndEqual(encGrad[i], encIP);
-
-								Ciphertext ctIP2(encIP2);
-								if(encGrad[i].logq > ctIP2.logq)
-									scheme.modDownToAndEqual(encGrad[i], ctIP2.logq);
-								if(encGrad[i].logq < ctIP2.logq)
-									scheme.modDownToAndEqual(ctIP2, encGrad[i].logq);
-								scheme.multAndEqual(encGrad[i], ctIP2);
-								scheme.reScaleByAndEqual(encGrad[i], ctIP2.logp);
-
-								Ciphertext ctIP4(encIP4);
-								if(encGrad[i].logq > ctIP4.logq)
-									scheme.modDownToAndEqual(encGrad[i], ctIP4.logq);
-								if(encGrad[i].logq < ctIP4.logq)
-									scheme.modDownToAndEqual(ctIP4, encGrad[i].logq);
-								scheme.multAndEqual(encGrad[i], encIP4);
-								scheme.reScaleByAndEqual(encGrad[i], ctIP4.logp);
-
-								if(tmp.logp > encGrad[i].logp) scheme.reScaleByAndEqual(tmp,tmp.logp-encGrad[i].logp);
-								if(tmp.logp < encGrad[i].logp) scheme.reScaleByAndEqual(encGrad[i], encGrad[i].logp-tmp.logp);
-								if(tmp.logq > encGrad[i].logq) scheme.modDownToAndEqual(tmp, encGrad[i].logq);
-								if(tmp.logq < encGrad[i].logq) scheme.modDownToAndEqual(encGrad[i], tmp.logq);
-								scheme.addAndEqual(encGrad[i], tmp);
-
-								tmp.kill();
-								ctIP2.kill();
-								ctIP4.kill();
-
-							}
-							NTL_EXEC_RANGE_END;
-
-							encIP4.kill();
-							encIP2c.kill();
-
+							tmp.kill();
+							ctIP2.kill();
+							ctIP.kill();
 						}
+						NTL_EXEC_RANGE_END;
+					/* END OF if(kdeg == 3) {  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
+
+					
 						encIP2.kill();
 						encIP.kill();
 
