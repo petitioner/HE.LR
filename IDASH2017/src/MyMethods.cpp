@@ -443,6 +443,8 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 		for (long r = 0; r < rnum; ++r) {
 			timeutils.start("NesterovWithGminBatch : "+ to_string(iter+1)+" -th iteration");
 
+cout << endl << endl << endl << endl << "encVData[0].logq = " << encVData[0].logq  << endl << endl << endl << endl;
+
 			eta = (1 - alpha0) / alpha1;
         
 
@@ -562,8 +564,8 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 
 
 
-						//NTL_EXEC_RANGE(cnum, first, last);
-						long first = 0, last = cnum;
+						NTL_EXEC_RANGE(cnum, first, last);
+						//long first = 0, last = cnum;
 						for (long i = first; i < last; ++i) {
 
 
@@ -607,7 +609,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 							ctIP2.kill();
 							ctIP.kill();
 						}
-						//NTL_EXEC_RANGE_END;
+						NTL_EXEC_RANGE_END;
 					/* END OF if(kdeg == 3) {  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 
 					
@@ -729,6 +731,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 			cout << "--------------------------------------------------------------------------------" << endl;
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+cout << endl << endl << endl << endl << "encVData[0].logq = " << encVData[0].logq  << endl << endl << endl << endl;
 
 			if ( encVData[0].logq < 50 ) {
 			//if ( encVData[0].logq <= 450 && iter < numIter-1 || encVData[0].logq < wBits && iter == numIter-1) {
