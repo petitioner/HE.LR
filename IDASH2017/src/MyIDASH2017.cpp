@@ -88,10 +88,12 @@ int main(int argc, char **argv) {
 		cout << "testfile  : " << testfile << endl;
 
 
-		MyMethods::testCryptoMiniBatchNAGwithG(traindata, trainlabel, trainfactorDim,
+		//MyMethods::testCryptoMiniBatchNAGwithG(traindata, trainlabel, trainfactorDim,
+		//	trainSampleDim, numIter, testdata, testlabel, testSampleDim,	pathNesterovAGwithXTXasG);
+	
+		MyMethods::testCryptoFullBatchNAGwithG(traindata, trainlabel, trainfactorDim,
 			trainSampleDim, numIter, testdata, testlabel, testSampleDim,	pathNesterovAGwithXTXasG);
 	
-
 
 	cout << endl << "END OF THE PROGRAMM" << endl;
 	return 0;
