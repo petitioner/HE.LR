@@ -453,6 +453,7 @@ cout << endl << endl << endl << endl << "encVData[0].logq = " << encVData[0].log
         	auto x = abs(iterations / step_size - 2 * cycle + 1);
 			//base_lr + (max_lr - base_lr) * max(0, (1 - x)) *clrgamma**(iterations)
 			auto gamma = base_lr + (max_lr - base_lr) * max(0., (1 - x)) * pow(clr_gamma, iterations);
+			gamma = 1;
 
 
 
@@ -733,7 +734,7 @@ cout << endl << endl << endl << endl << "encVData[0].logq = " << encVData[0].log
 
 cout << endl << endl << endl << endl << "encVData[0].logq = " << encVData[0].logq  << endl << endl << endl << endl;
 
-			if ( encVData[0].logq < 50 ) {
+			if ( encVData[0].logq < 220 + encVData[0].logp ) {
 			//if ( encVData[0].logq <= 450 && iter < numIter-1 || encVData[0].logq < wBits && iter == numIter-1) {
 
 				timeutils.start("Use Bootstrap To Recrypt Ciphertext");
