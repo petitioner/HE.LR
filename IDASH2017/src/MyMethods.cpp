@@ -263,7 +263,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 
 		for (long i = 0; i < minbatchsize; ++i) {
 			for(long j = 0; j < factorDim; ++j)
-				Binv[r*minbatchsize + i][j] = min(zTemp[i][j], 64.); // overflow for learning rates!!
+				Binv[r*minbatchsize + i][j] = min(zTemp[i][j], 32.); // overflow:: beyond the precision!!
 		}
 		delete[] zInvB;
 		delete[] zTemp;
@@ -280,7 +280,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 
 		for (long i = 0; i < restrows; ++i) {
 			for(long j = 0; j < factorDim; ++j)
-				Binv[(rnum-1)*minbatchsize + i][j] = min(zTemp[i][j], 64.); // overflow for learning rates!!
+				Binv[(rnum-1)*minbatchsize + i][j] = min(zTemp[i][j], 32.); // overflow:: beyond the precision!!
 		}
 		delete[] zInvB;
 		delete[] zTemp;
@@ -537,13 +537,6 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double** traindata, double* train
 
 //  SO FAR SO GOOD
 
-complex<double>* dcvxv = scheme.decrypt(secretKey, encIP);
-cout << endl << endl << " - - - - - - - - - - " << r << "-th batch: inputs to sigmoid- - - - - - - - - -" << endl << endl;
-for (long i = 0; i < 5; ++i) {
-	for (long j = 0; j < 1; ++j)
-		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[i*batch + j].real() << "\t";
-}
-cout << endl << endl;
 
 				Ciphertext* encGrad = new Ciphertext[cnum];
 
@@ -555,12 +548,7 @@ cout << endl << endl;
 						// IT IS VERY IMPORT TO KEEP THE logp BIG ENOUGH TO PRESENT THE NUMBER !!  MAKE SURE encIP2.logp>=35
 						scheme.reScaleByAndEqual(encIP2, encIP.logp);                // For now, encIP.logp is big enough
 
-dcvxv = scheme.decrypt(secretKey, encIP2);
-for (long i = 0; i < 5; ++i) {
-	for (long j = 0; j < 1; ++j)
-		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[i*batch + j].real() << "\t";
-}
-cout << endl << endl;
+
 
 						//////////////////////////////////////// when iteration < 05 ////////////////////////////////////////
 						cout << endl << "INSIDE iter < 5;  poly3 = ";
@@ -570,66 +558,31 @@ cout << endl << endl;
 						cout << std::noshowpos;
 						cout << "gamma = " << gamma << endl << endl << endl;
 
-cout << "degree3[1] / degree3[2] = " << degree3[1] / degree3[2] << endl;
 						scheme.addConstAndEqual(encIP2, degree3[1] / degree3[2], encIP2.logp);                // encIP2 = a/b + yWTx*yWTx
-dcvxv = scheme.decrypt(secretKey, encIP2);
-for (long i = 0; i < 5; ++i) {
-	for (long j = 0; j < 1; ++j)
-		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[i*batch + j].real() << "\t";
-}
-cout << endl << endl;
 
-gamma=1;
-cout << "gamma = " << gamma << endl << endl;
 
 
 						//NTL_EXEC_RANGE(cnum, first, last);
 						long first = 0, last = cnum;
 						for (long i = first; i < last; ++i) {
 
-dcvxv = scheme.decrypt(secretKey, encZData[i]);
-for (long b = 0; b < batch; ++b)
-		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[ b].real() << "\t";
-
-cout << endl << endl;
-	
-cout << "(gamma)  * degree3[2] := " << (gamma)  * degree3[2] << endl;
 
 							scheme.multByConst(encGrad[i], encZData[i], (gamma)  * degree3[2], wBits+pBits);
 
 							scheme.reScaleByAndEqual(encGrad[i], pBits);                             // encGrad = Y@X *gamma * b
 
-dcvxv = scheme.decrypt(secretKey, encGrad[i]);
-for (long b = 0; b < batch; ++b)
-		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[ b].real() << "\t";
 
-cout << endl << endl;
 
 							Ciphertext ctIP(encIP);
 							if (encGrad[i].logq > ctIP.logq)
 								scheme.modDownToAndEqual(encGrad[i], ctIP.logq);     /* whose logq should be ... */
 							if (encGrad[i].logq < ctIP.logq)
 								scheme.modDownToAndEqual(ctIP, encGrad[i].logq);
-dcvxv = scheme.decrypt(secretKey, ctIP);
-for (long b = 0; b < batch; ++b)
-		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[ b].real() << "\t";
 
-cout << endl << endl;
 
 							scheme.multAndEqual(encGrad[i], ctIP);                                  // encGrad = gamma * Y@X * b * yWTx
 							scheme.reScaleByAndEqual(encGrad[i], ctIP.logp);
-dcvxv = scheme.decrypt(secretKey, encGrad[i]);
-for (long b = 0; b < batch; ++b)
-		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[ b].real() << "\t";
 
-cout << endl << endl;
-
-
-dcvxv = scheme.decrypt(secretKey, encIP2);
-for (long b = 0; b < batch; ++b)
-		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[ b].real() << "\t";
-
-cout << endl << endl;
 
 							Ciphertext ctIP2(encIP2);
 							if(encGrad[i].logq > ctIP2.logq)
@@ -638,38 +591,17 @@ cout << endl << endl;
 								scheme.modDownToAndEqual(ctIP2, encGrad[i].logq);
 							scheme.multAndEqual(encGrad[i], ctIP2);                                 // encGrad = gamma * Y@X * (a * yWTx + b * yWTx ^3)
 							scheme.reScaleByAndEqual(encGrad[i], ctIP2.logp);
-dcvxv = scheme.decrypt(secretKey, encGrad[i]);
-for (long b = 0; b < batch; ++b)
-		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[ b].real() << "\t";
-
-cout << endl << endl;
 
 
-dcvxv = scheme.decrypt(secretKey, encZData[i]);
-for (long b = 0; b < batch; ++b)
-		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[ b].real() << "\t";
 
-cout << endl << endl;
-	
-cout << "(gamma)  * degree3[0] := " << (gamma)  * degree3[0] << endl;
 							Ciphertext tmp;
 							scheme.multByConst(tmp, encZData[i], (gamma)  * degree3[0], wBits);         // tmp = Y@X * gamma * 0.5
 
 							scheme.modDownToAndEqual(tmp, encGrad[i].logq);  // encGrad[i].logq == tmp.logq
-dcvxv = scheme.decrypt(secretKey, tmp);
-for (long b = 0; b < batch; ++b)
-		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[ b].real() << "\t";
-
-cout << endl << endl;
 	
 
 							scheme.addAndEqual(encGrad[i], tmp);                                     // encGrad = gamma * Y@X * (0.5 + a * yWTx + b * yWTx ^3)
 
-dcvxv = scheme.decrypt(secretKey, encGrad[i]);
-for (long b = 0; b < batch; ++b)
-		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[ b].real() << "\t";
-
-cout << endl << endl;
 
 							tmp.kill();
 							ctIP2.kill();
@@ -678,31 +610,12 @@ cout << endl << endl;
 						//NTL_EXEC_RANGE_END;
 					/* END OF if(kdeg == 3) {  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 
-cout << endl << endl << "THE QG : " << endl;
-for (long c = 0; c < 1; ++c ) {
-	dcvxv = scheme.decrypt(secretKey, encGrad[c]);
-	for (long b = 0; b < batch; ++b)
-		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[c*batch + b].real() << "\t";
-}
-cout << endl << endl;
 					
 						encIP2.kill();
 						encIP.kill();
 
-cout << endl << endl << "THE encBinv : " << endl;
-for (long c = 0; c < cnum; ++c ) {
-	dcvxv = scheme.decrypt(secretKey, encBinv[r*cnum+c]);
-	for (long b = 0; b < batch; ++b)
-		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[c*batch + b].real() << "\t";
-}
-cout << endl << endl;
-// cout << endl << endl << "THE Gradient : " << endl;
-// for (long c = 0; c < cnum; ++c ) {
-// 	dcvxv = scheme.decrypt(secretKey, encGrad[c]);
-// 	for (long b = 0; b < batch; ++b)
-// 		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[c*batch + b].real() << "\t";
-// }
-// cout << endl << endl;
+
+
 					// Sum Each Column of encGrad[i] To Get the Final gradient : (1 - sigm(yWTx)) * Y.T @ X
 					NTL_EXEC_RANGE(cnum, first, last);
 					for (long i = first; i < last; ++i) {
@@ -712,53 +625,23 @@ cout << endl << endl;
 							scheme.addAndEqual(encGrad[i], tmp);
 						}
 
-//						Ciphertext ctBinv(encBinv[r*cnum+i]); ////~~~~~~//~~~~~~//~~~~~~//~~~~~~//~~~~~~//~~~~~~//~~~~~~
-//						if (encGrad[i].logq > ctBinv.logq)
-//							scheme.modDownToAndEqual(encGrad[i], ctBinv.logq);
-//						if (encGrad[i].logq < ctBinv.logq)
-//							scheme.modDownToAndEqual(ctBinv, encGrad[i].logq);
-//
-//						scheme.multAndEqual(encGrad[i], ctBinv);
-//						scheme.reScaleByAndEqual(encGrad[i], ctBinv.logp);
-
-						tmp.kill();
-//						ctBinv.kill();
-					}
-					NTL_EXEC_RANGE_END;
-					/* Each ([i][0~batch)-th) column of encGrad[i] consists of the same value (gamma * encGrad[i][0~batch)) */
-				/* CipherGD::encSigmoid(kdeg, encZData, encGrad, encIP, cnum, gamma, sBits, bBits, wBits, aBits); */
-
-cout << endl << endl << "THE realGradient : " << endl;
-for (long c = 0; c < cnum; ++c ) {
-	dcvxv = scheme.decrypt(secretKey, encGrad[c]);
-	for (long b = 0; b < batch; ++b)
-		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[c*batch + b].real() << "\t";
-}
-cout << endl << endl;
-	
-cout << "encBinv[r*cnum+i].logp = " << encBinv[0].logp << endl << endl;
-					// Sum Each Column of encGrad[i] To Get the Final gradient : (1 - sigm(yWTx)) * Y.T @ X
-					//NTL_EXEC_RANGE(cnum, first, last);
-					first=0; last=cnum;
-					for (long i = first; i < last; ++i) {
-						Ciphertext ctBinv(encBinv[r*cnum+i]); 
+						Ciphertext ctBinv(encBinv[r*cnum+i]); ////~~~~~~//~~~~~~//~~~~~~//~~~~~~//~~~~~~//~~~~~~//~~~~~~
+						if (encGrad[i].logq > ctBinv.logq)
+							scheme.modDownToAndEqual(encGrad[i], ctBinv.logq);
+						if (encGrad[i].logq < ctBinv.logq)
 							scheme.modDownToAndEqual(ctBinv, encGrad[i].logq);
 
 						scheme.multAndEqual(encGrad[i], ctBinv);
 						scheme.reScaleByAndEqual(encGrad[i], ctBinv.logp);
 
+						tmp.kill();
 						ctBinv.kill();
 					}
-					//NTL_EXEC_RANGE_END;
+					NTL_EXEC_RANGE_END;
+					/* Each ([i][0~batch)-th) column of encGrad[i] consists of the same value (gamma * encGrad[i][0~batch)) */
+				/* CipherGD::encSigmoid(kdeg, encZData, encGrad, encIP, cnum, gamma, sBits, bBits, wBits, aBits); */
 
-cout << endl << endl << "THE QGradient : " << endl;
-for (long c = 0; c < cnum; ++c ) {
-	dcvxv = scheme.decrypt(secretKey, encGrad[c]);
-	for (long b = 0; b < batch; ++b)
-		cout << std::showpos << std::fixed << std::setw(6) << dcvxv[c*batch + b].real() << "\t";
-}
-cout << endl << endl;
-//exit(0);	
+
 
 				/* CipherGD::encNLGDstep(encWData, encVData, encGrad, eta, cnum, pBits); */
 					NTL_EXEC_RANGE(cnum, first, last);
@@ -847,7 +730,7 @@ cout << endl << endl;
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-			if ( encVData[0].logq < 450 ) {
+			if ( encVData[0].logq < 50 ) {
 			//if ( encVData[0].logq <= 450 && iter < numIter-1 || encVData[0].logq < wBits && iter == numIter-1) {
 
 				timeutils.start("Use Bootstrap To Recrypt Ciphertext");
