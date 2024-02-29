@@ -41,10 +41,10 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 	long bBits = (long) ceil(log2(batch)); // 2^batchBits = min( 2^logN / 2^sdimBits / 2, 2^fdimBits ) = min( N/2 /n, factorDim ) ;
 
 	// the size of batch should be small than fatctorDim
-	if (batch >= factorDim) {
-		cout << "batch >= factorDim!" << endl;
-		exit(0);
-	}
+	//if (batch >= factorDim) {
+	//	cout << "batch >= factorDim!" << endl;
+	//	exit(0);
+	//}
 
 	//long factorNum = 1 << (long)ceil(log2(factorDim));
 	long cnum = (long) ceil(double(factorDim) / batch); // To Divide the whole Train Data into Several Batches (cnum Ciphertexts).
@@ -912,10 +912,10 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 	long bBits = (long) ceil(log2(batch)); // 2^batchBits = min( 2^logN / 2^sdimBits / 2, 2^fdimBits ) = min( N/2 /n, factorDim ) ;
 
 	// the size of batch should be small than fatctorDim
-	if (batch >= factorDim) {
-		cout << "batch >= factorDim!" << endl;
-		exit(0);
-	}
+	//if (batch >= factorDim) {
+	//	cout << "batch >= factorDim!" << endl;
+	//	exit(0);
+	//}
 
 	//long factorNum = 1 << (long)ceil(log2(factorDim));
 	long cnum = (long) ceil(double(factorDim) / batch); // To Divide the whole Train Data into Several Batches (cnum Ciphertexts).
