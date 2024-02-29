@@ -201,7 +201,7 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 	Ciphertext *encTrainLabel = new Ciphertext[rnum * cnum];
 
 	Ciphertext *encXyZdata = new Ciphertext[rnum * cnum]; // TrainLabel @ TrainData = yX
-	Ciphertext *encBinv = new Ciphertext[rnum * cnum];
+	Ciphertext *encBinv = new Ciphertext[cnum];
 
 	Ciphertext *encWData = new Ciphertext[cnum];
 	Ciphertext *encVData = new Ciphertext[cnum];
@@ -316,18 +316,18 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 			Binv[r][c] = min(Binv[r][c], 32.); // overflow:: beyond the precision!!
 	timeutils.start("Encrypting Binv...");
 	// encrypt the traindata
-	for (long r = 0; r < rnum - 1; ++r) {
+
 		for (long i = 0; i < cnum - 1; ++i) {
 
 			complex<double> *pzData = new complex<double> [slots]();
 			for (long j = 0; j < minbatchsize; ++j) {
 				for (long l = 0; l < batch; ++l) {
 					pzData[batch * j + l].real(
-							Binv[r * minbatchsize + j][batch * i + l]);
+							Binv[j][batch * i + l]);
 					pzData[batch * j + l].imag(0);
 				}
 			}
-			scheme.encrypt(encBinv[r * cnum + i], pzData, slots, wBits, logQ);
+			scheme.encrypt(encBinv[i], pzData, slots, wBits, logQ);
 		}
 		// i == cnum - 1       - the last cnum in each row
 		complex<double> *pzData3 = new complex<double> [slots]();
@@ -336,7 +336,7 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 
 			for (long l = 0; l < rest; ++l) {
 				pzData3[batch * j + l].real(
-						Binv[r * minbatchsize + j][batch * (cnum - 1) + l]);
+						Binv[j][batch * (cnum - 1) + l]);
 				pzData3[batch * j + l].imag(0);
 			}
 			for (long l = rest; l < batch; ++l) {
@@ -344,57 +344,9 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 				pzData3[batch * j + l].imag(0);
 			}
 		}
-		scheme.encrypt(encBinv[r * cnum + cnum - 1], pzData3, slots, wBits,
+		scheme.encrypt(encBinv[cnum - 1], pzData3, slots, wBits,
 				logQ);
 
-	}
-	// The last min-batch may consists of several ( trainSampleDim - minbatchsize * (rnum-1) ) rows of zeors.
-
-	// r == rnum - 1       - the last rnum (the last min-batch)
-	restrownum = trainSampleDim - minbatchsize * (rnum - 1);
-	for (long i = 0; i < cnum - 1; ++i) {
-
-		complex<double> *pzData = new complex<double> [slots]();
-		for (long j = 0; j < restrownum; ++j) {
-			for (long l = 0; l < batch; ++l) {
-				pzData[batch * j + l].real(
-						Binv[(rnum - 1) * minbatchsize + j][batch * i + l]);
-				pzData[batch * j + l].imag(0);
-			}
-		}
-		for (long j = restrownum; j < minbatchsize; ++j) {
-			for (long l = 0; l < batch; ++l) {
-				pzData[batch * j + l].real(0);
-				pzData[batch * j + l].imag(0);
-			}
-		}
-		scheme.encrypt(encBinv[(rnum - 1) * cnum + i], pzData, slots, wBits,
-				logQ);
-	}
-	// i == cnum - 1       - the last cnum in each row
-	complex<double> *pzData7 = new complex<double> [slots]();
-	for (long j = 0; j < restrownum; ++j) {
-		long rest = factorDim - batch * (cnum - 1);
-		for (long l = 0; l < rest; ++l) {
-			pzData7[batch * j + l].real(
-					Binv[(rnum - 1) * minbatchsize + j][batch * (cnum - 1) + l]);
-			pzData7[batch * j + l].imag(0);
-		}
-		for (long l = rest; l < batch; ++l) {
-			pzData7[batch * j + l].real(0);
-			pzData7[batch * j + l].imag(0);
-		}
-	}
-	for (long j = restrownum; j < minbatchsize; ++j) {
-		//long rest = factorDim - batch * (cnum - 1);
-		for (long l = 0; l < batch; ++l) {
-			pzData7[batch * j + l].real(0);
-			pzData7[batch * j + l].imag(0);
-		}
-	}
-	scheme.encrypt(encBinv[(rnum - 1) * cnum + cnum - 1], pzData7, slots, wBits,
-			logQ);
-	delete[] pzData7;
 	timeutils.stop("Binv encryption");
 
 	openFileTIME << "," << timeutils.timeElapsed;
@@ -586,8 +538,22 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 		encGrad[i].n = slots;
 	}
 	NTL_EXEC_RANGE_END
+			
 
-			for (long r = 0; r < rnum; ++r) {
+			//////////////////////////////////////// when iteration < 05 ////////////////////////////////////////
+				cout << endl << "INSIDE iter < 5;  poly3 = ";
+				cout << setiosflags(ios::showpos) << degree3[0] << " ";
+				cout << setiosflags(ios::showpos) << degree3[1] << "x ";
+				cout << setiosflags(ios::showpos) << degree3[2] << "x^3 "
+						<< endl << endl;
+				cout << std::noshowpos;
+				cout << "gamma = " << gamma << endl << endl << endl;
+
+
+			for (long r = 0; r < rnum; ++r) 
+			//NTL_EXEC_RANGE(rnum, first, last);
+			//for (long r = first; r < last; ++r) 
+			{
 
 				/* CipherGD::encSigmoid(kdeg, encZData, encGrad, encIP, cnum, gamma, sBits, bBits, wBits, aBits); */
 
@@ -596,15 +562,6 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 
 				// IT IS VERY IMPORT TO KEEP THE logp BIG ENOUGH TO PRESENT THE NUMBER !!  MAKE SURE encIP2.logp>=35
 				scheme.reScaleByAndEqual(encIP2, encIP[r].logp); // For now, encIP.logp is big enough
-
-				//////////////////////////////////////// when iteration < 05 ////////////////////////////////////////
-				cout << endl << "INSIDE iter < 5;  poly3 = ";
-				cout << setiosflags(ios::showpos) << degree3[0] << " ";
-				cout << setiosflags(ios::showpos) << degree3[1] << "x ";
-				cout << setiosflags(ios::showpos) << degree3[2] << "x^3 "
-						<< endl << endl;
-				cout << std::noshowpos;
-				cout << "gamma = " << gamma << endl << endl << endl;
 
 				scheme.addConstAndEqual(encIP2, degree3[1] / degree3[2],
 						encIP2.logp);                // encIP2 = a/b + yWTx*yWTx
@@ -669,6 +626,7 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 				encIP2.kill();
 				//encIP.kill();
 			}
+			//NTL_EXEC_RANGE_END Bugs Found Here ！
 
 			// Sum Each Column of encGrad[i] To Get the Final gradient : (1 - sigm(yWTx)) * Y.T @ X
 			NTL_EXEC_RANGE(cnum, first, last);
@@ -701,7 +659,7 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 			for (long c = 0; c < cnum; ++c) {
 				complex<double> *dcvdddddv = scheme.decrypt(secretKey, encGrad[c]);
 				for (long j = 0; j < batch; ++j) 
-					cout << setiosflags(ios::fixed) << setprecision(6) << dcvdddddv[j] << "\t";
+					cout << setiosflags(ios::fixed) << setprecision(6) << dcvdddddv[j].real() << "\t";
 
 				delete[] dcvdddddv;
 			}
