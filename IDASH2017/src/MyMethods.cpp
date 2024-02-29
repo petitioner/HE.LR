@@ -586,6 +586,12 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 			Ciphertext *encGrad = new Ciphertext[cnum];
+	NTL_EXEC_RANGE(cnum, first, last);
+	for (long i = first; i < last; ++i) {
+		scheme.encryptSingle(encGrad[i], 0.0, wBits, logQ);
+		encGrad[i].n = slots;
+	}
+	NTL_EXEC_RANGE_END
 
 			for (long r = 0; r < rnum; ++r) {
 
@@ -643,8 +649,20 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 
 					scheme.addAndEqual(encGradtemp, tmp);// encGrad = gamma * Y@X * (0.5 + a * yWTx + b * yWTx ^3)
 
-					scheme.addAndEqual(encGrad[i], encGradtemp);
+cout << "(encGrad[i].logp) " << encGrad[i].logp  << endl << endl;
 
+					if(encGrad[i].logp > encGradtemp.logp) 
+						scheme.reScaleByAndEqual(encGrad[i], encGrad[i].logp-encGradtemp.logp);
+					if(encGrad[i].logp < encGradtemp.logp) 
+						scheme.reScaleByAndEqual(encGradtemp, encGradtemp.logp-encGrad[i].logp);
+					if (encGrad[i].logq > encGradtemp.logq) 
+						scheme.modDownToAndEqual(encGrad[i], encGradtemp.logq);
+					if (encGrad[i].logq < encGradtemp.logq) 
+						scheme.modDownToAndEqual(encGradtemp, encGrad[i].logq);
+					if (encGrad[i].logp != encGradtemp.logp) {cout << "logp != logp";exit(0);}
+
+					scheme.addAndEqual(encGrad[i], encGradtemp);
+cout << "(encGrad[i].logp) " << encGrad[i].logp  << endl << endl;
 					tmp.kill();
 					ctIP2.kill();
 					ctIP.kill();
@@ -667,6 +685,9 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+cout << "(encGrad[i].logp > encVData[i].logp) " << encGrad[0].logp << "\t" << encVData[0].logp << endl << endl;
+cout << "(encBinv[i].logp) " << encBinv[0].logp << endl << endl;
 
 			// Sum Each Column of encGrad[i] To Get the Final gradient : (1 - sigm(yWTx)) * Y.T @ X
 			NTL_EXEC_RANGE(cnum, first, last);
@@ -697,37 +718,38 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 			/* CipherGD::encNLGDstep(encWData, encVData, encGrad, eta, cnum, pBits); */
 			NTL_EXEC_RANGE(cnum, first, last);
 			for (long i = first; i < last; ++i) {
-
+cout << endl << endl << "123HdddddddddESFDE" << endl << endl << endl;
+cout << "(encGrad[i].logp > encVData[i].logp) " << encGrad[i].logp << "\t" << encVData[i].logp << endl << endl;
 				if(encGrad[i].logp > encVData[i].logp) scheme.reScaleByAndEqual(encGrad[i], encGrad[i].logp-encVData[i].logp);
 				if(encGrad[i].logp < encVData[i].logp) scheme.reScaleByAndEqual(encVData[i], encVData[i].logp-encGrad[i].logp);
 				scheme.modDownToAndEqual(encVData[i], encGrad[i].logq);
-
+cout << endl << endl << "456HdddddddddESFDE" << endl << endl << endl;
 				Ciphertext ctmpw;
 				scheme.add(ctmpw, encVData[i], encGrad[i]); // encGrad[i] has already self-multiplied with gamma
 															// ctmpw = encVData[i] - encGrad[i]
-
+cout << endl << endl << "789HdddddddddESFDE" << endl << endl << endl;
 				scheme.multByConst(encVData[i], ctmpw, 1. - eta, pBits);// encVData[i] = ( 1. - eta ) * ctmpw
 				//scheme.reScaleByAndEqual(encVData[i], pBits-5);
-
+cout << endl << endl << "3445HdddddddddESFDE" << endl << endl << endl;
 				scheme.multByConstAndEqual(encWData[i], eta, pBits);// encWData[i] = eta * encWData[i]
 				//scheme.reScaleByAndEqual(encWData[i], pBits-5);
-
+cout << endl << endl << "Hdddfgfgfs4534ddddddESFDE" << endl << endl << endl;
 				if (encWData[i].logq > encVData[i].logq) scheme.modDownToAndEqual(encWData[i], encVData[i].logq);
 				if (encWData[i].logq < encVData[i].logq) scheme.modDownToAndEqual(encVData[i], encWData[i].logq);
 				if (encWData[i].logp != encVData[i].logp) {cout << "logp != logp";exit(0);}
-
+cout << endl << endl << "Hddd37721ddddddESFDE" << endl << endl << endl;
 				scheme.addAndEqual(encVData[i], encWData[i]); // encVData[i] = encVData[i] + encWData[i]
 				// encVData[i] = ( 1. - eta ) * ctmpw + eta * encWData[i]
-
+cout << endl << endl << "Hddd56824ddddddESFDE" << endl << endl << endl;
 				scheme.reScaleByAndEqual(encVData[i], pBits);
 				encWData[i].copy(ctmpw);
-
+cout << endl << endl << "Hdddt95ddddddESFDE" << endl << endl << endl;
 				ctmpw.kill();
 			}
 			NTL_EXEC_RANGE_END
 			;
 			/* CipherGD::encNLGDstep(encWData, encVData, encGrad, eta, cnum, pBits); */
-
+cout << endl << endl << "Hdd34588dddddddESFDE" << endl << endl << endl;
 			for (long i = 0; i < cnum; ++i)
 				encGrad[i].kill();
 			delete[] encGrad;
