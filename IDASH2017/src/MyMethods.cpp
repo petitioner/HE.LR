@@ -311,6 +311,9 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 
 	double **Binv = MyTools::zInvBFromFile(traindata, factorDim,
 			trainSampleDim);
+	for (long r = 0; r < trainSampleDim; ++r)
+		for (long c = 0; c < factorDim; ++c)
+			Binv[r][c] = min(Binv[r][c], 32.); // overflow:: beyond the precision!!
 	timeutils.start("Encrypting Binv...");
 	// encrypt the traindata
 	for (long r = 0; r < rnum - 1; ++r) {
@@ -694,7 +697,7 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 			/* CipherGD::encSigmoid(kdeg, encZData, encGrad, encIP, cnum, gamma, sBits, bBits, wBits, aBits); */
 
 
-			cout << endl << endl << "Quadratic Gradient: " << endl ;
+			cout << endl << "Quadratic Gradient: " << endl ;
 			for (long c = 0; c < cnum; ++c) {
 				complex<double> *dcvdddddv = scheme.decrypt(secretKey, encGrad[c]);
 				for (long j = 0; j < batch; ++j) 
