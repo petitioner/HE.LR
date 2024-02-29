@@ -18,10 +18,10 @@ int main(int argc, char **argv) {
 
 	long numIter = 35;
 
-	//string trainfile = "../data/Credit_train.csv";
-	//string testfile = "../data/Credit_test.csv";
-	string trainfile = "../data/MNIST_train.txt";
-	string testfile = "../data/MNIST_test.txt";
+	string trainfile = "../data/Credit_train.csv";
+	string testfile = "../data/Credit_test.csv";
+	//string trainfile = "../data/MNIST_train.txt";
+	//string testfile = "../data/MNIST_test.txt";
 
 	long trainSampleDim = 0, testSampleDim = 0, trainfactorDim = 0,	testfactorDim = 0;
 	double **traindataset, **testdataset;
