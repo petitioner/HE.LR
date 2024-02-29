@@ -317,35 +317,32 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 	timeutils.start("Encrypting Binv...");
 	// encrypt the traindata
 
-		for (long i = 0; i < cnum - 1; ++i) {
+	for (long i = 0; i < cnum - 1; ++i) {
 
-			complex<double> *pzData = new complex<double> [slots]();
-			for (long j = 0; j < minbatchsize; ++j) {
-				for (long l = 0; l < batch; ++l) {
-					pzData[batch * j + l].real(
-							Binv[j][batch * i + l]);
-					pzData[batch * j + l].imag(0);
-				}
-			}
-			scheme.encrypt(encBinv[i], pzData, slots, wBits, logQ);
-		}
-		// i == cnum - 1       - the last cnum in each row
-		complex<double> *pzData3 = new complex<double> [slots]();
+		complex<double> *pzData = new complex<double> [slots]();
 		for (long j = 0; j < minbatchsize; ++j) {
-			long rest = factorDim - batch * (cnum - 1);
-
-			for (long l = 0; l < rest; ++l) {
-				pzData3[batch * j + l].real(
-						Binv[j][batch * (cnum - 1) + l]);
-				pzData3[batch * j + l].imag(0);
-			}
-			for (long l = rest; l < batch; ++l) {
-				pzData3[batch * j + l].real(0);
-				pzData3[batch * j + l].imag(0);
+			for (long l = 0; l < batch; ++l) {
+				pzData[batch * j + l].real(Binv[j][batch * i + l]);
+				pzData[batch * j + l].imag(0);
 			}
 		}
-		scheme.encrypt(encBinv[cnum - 1], pzData3, slots, wBits,
-				logQ);
+		scheme.encrypt(encBinv[i], pzData, slots, wBits, logQ);
+	}
+	// i == cnum - 1       - the last cnum in each row
+	complex<double> *pzData3 = new complex<double> [slots]();
+	for (long j = 0; j < minbatchsize; ++j) {
+		long rest = factorDim - batch * (cnum - 1);
+
+		for (long l = 0; l < rest; ++l) {
+			pzData3[batch * j + l].real(Binv[j][batch * (cnum - 1) + l]);
+			pzData3[batch * j + l].imag(0);
+		}
+		for (long l = rest; l < batch; ++l) {
+			pzData3[batch * j + l].real(0);
+			pzData3[batch * j + l].imag(0);
+		}
+	}
+	scheme.encrypt(encBinv[cnum - 1], pzData3, slots, wBits, logQ);
 
 	timeutils.stop("Binv encryption");
 
@@ -442,8 +439,6 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 					"NesterovWithGminBatch : " + to_string(iter + 1)
 							+ " -th iteration");
 
-			cout << endl << endl << endl << endl << "encVData[0].logq = "
-					<< encVData[0].logq << endl << endl << endl << endl;
 
 			eta = (1 - alpha0) / alpha1;
 
@@ -456,22 +451,14 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 							* pow(clr_gamma, iterations);
 			gamma = 1;
 
-			/* cipherGD.encZData(encZData, zDataTrain, slots, factorDim, trainSampleDim, batch, cnum, wBits, logQ);  */
+
 			Ciphertext *encZData = new Ciphertext[rnum * cnum];
-			//timeutils.start("encZData[i] = encTrainLabel[i] @ encTrainData[i] for i in range(cnum)");
-			// To Get the encZData
 			NTL_EXEC_RANGE(rnum*cnum, first, last);
 			for(long i = first; i < last; ++i) {
 				//encZData[i].copy(encXyZdata[randr[r] * cnum + i]);
 				encZData[i].copy(encXyZdata[i]);
 			}
 			NTL_EXEC_RANGE_END
-			//timeutils.stop("encZData[i] for i in range(cnum) is done");
-			/* cipherGD.encZData(encZData, zDataTrain, slots, factorDim, trainSampleDim, batch, cnum, wBits, logQ);  */
-
-			/* cipherGD.encNLGDiteration(kdeg, encZData, encWData, encVData, rpoly, cnum, gamma, eta, sBits, bBits, wBits, pBits, aBits); */
-
-			/* CipherGD::encInnerProduct(encIP, encZData, encWData, rpoly, cnum, bBits, wBits, pBits); */
 			Ciphertext *encIPvec = new Ciphertext[rnum * cnum];
 
 			/* For Each Batch, Sum Itself Inside */
@@ -530,30 +517,27 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 			delete[] encIPvec;
 			//CipherGD::encInnerProduct(encIP, encZData, encVData, rpoly, cnum, bBits, wBits, pBits); 
 
-
 			Ciphertext *encGrad = new Ciphertext[cnum];
-	NTL_EXEC_RANGE(cnum, first, last);
-	for (long i = first; i < last; ++i) {
-		scheme.encryptSingle(encGrad[i], 0.0, wBits, logQ);
-		encGrad[i].n = slots;
-	}
-	NTL_EXEC_RANGE_END
-			
+			NTL_EXEC_RANGE(cnum, first, last);
+			for (long i = first; i < last; ++i) {
+				scheme.encryptSingle(encGrad[i], 0.0, wBits, logQ);
+				encGrad[i].n = slots;
+			}
+			NTL_EXEC_RANGE_END
 
 			//////////////////////////////////////// when iteration < 05 ////////////////////////////////////////
-				cout << endl << "INSIDE iter < 5;  poly3 = ";
-				cout << setiosflags(ios::showpos) << degree3[0] << " ";
-				cout << setiosflags(ios::showpos) << degree3[1] << "x ";
-				cout << setiosflags(ios::showpos) << degree3[2] << "x^3 "
-						<< endl << endl;
-				cout << std::noshowpos;
-				cout << "gamma = " << gamma << endl << endl << endl;
+			cout << endl << "INSIDE iter < 5;  poly3 = ";
+			cout << setiosflags(ios::showpos) << degree3[0] << " ";
+			cout << setiosflags(ios::showpos) << degree3[1] << "x ";
+			cout << setiosflags(ios::showpos) << degree3[2] << "x^3 " << endl
+					<< endl;
+			cout << std::noshowpos;
+			cout << "gamma = " << gamma << endl << endl << endl;
 
-
-			for (long r = 0; r < rnum; ++r) 
+			for (long r = 0; r < rnum; ++r)
 			//NTL_EXEC_RANGE(rnum, first, last);
 			//for (long r = first; r < last; ++r) 
-			{
+					{
 
 				/* CipherGD::encSigmoid(kdeg, encZData, encGrad, encIP, cnum, gamma, sBits, bBits, wBits, aBits); */
 
@@ -600,16 +584,14 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 
 					scheme.addAndEqual(encGradtemp, tmp);// encGrad = gamma * Y@X * (0.5 + a * yWTx + b * yWTx ^3)
 
-
-
-					if(encGrad[i].logp > encGradtemp.logp) 
-						scheme.reScaleByAndEqual(encGrad[i], encGrad[i].logp-encGradtemp.logp);
-					if(encGrad[i].logp < encGradtemp.logp) 
-						scheme.reScaleByAndEqual(encGradtemp, encGradtemp.logp-encGrad[i].logp);
-					if (encGrad[i].logq > encGradtemp.logq) 
-						scheme.modDownToAndEqual(encGrad[i], encGradtemp.logq);
-					if (encGrad[i].logq < encGradtemp.logq) 
-						scheme.modDownToAndEqual(encGradtemp, encGrad[i].logq);
+					if(encGrad[i].logp > encGradtemp.logp)
+					scheme.reScaleByAndEqual(encGrad[i], encGrad[i].logp-encGradtemp.logp);
+					if(encGrad[i].logp < encGradtemp.logp)
+					scheme.reScaleByAndEqual(encGradtemp, encGradtemp.logp-encGrad[i].logp);
+					if (encGrad[i].logq > encGradtemp.logq)
+					scheme.modDownToAndEqual(encGrad[i], encGradtemp.logq);
+					if (encGrad[i].logq < encGradtemp.logq)
+					scheme.modDownToAndEqual(encGradtemp, encGrad[i].logq);
 					if (encGrad[i].logp != encGradtemp.logp) {cout << "logp != logp";exit(0);}
 
 					scheme.addAndEqual(encGrad[i], encGradtemp);
@@ -625,6 +607,7 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 
 				encIP2.kill();
 				//encIP.kill();
+				for (long kk = 0; kk < rnum; ++kk) encIP[kk].kill();
 			}
 			//NTL_EXEC_RANGE_END Bugs Found Here ！
 
@@ -654,35 +637,21 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 			/* Each ([i][0~batch)-th) column of encGrad[i] consists of the same value (gamma * encGrad[i][0~batch)) */
 			/* CipherGD::encSigmoid(kdeg, encZData, encGrad, encIP, cnum, gamma, sBits, bBits, wBits, aBits); */
 
-
-			cout << endl << "Quadratic Gradient: " << endl ;
+			cout << endl << "Quadratic Gradient: " << endl;
 			for (long c = 0; c < cnum; ++c) {
-				complex<double> *dcvdddddv = scheme.decrypt(secretKey, encGrad[c]);
-				for (long j = 0; j < batch; ++j) 
-					cout << setiosflags(ios::fixed) << setprecision(6) << dcvdddddv[j].real() << "\t";
+				complex<double> *dcvdddddv = scheme.decrypt(secretKey,
+						encGrad[c]);
+				for (long j = 0; j < batch; ++j)
+					cout << setiosflags(ios::fixed) << setprecision(6)
+							<< dcvdddddv[j].real() << "\t";
 
 				delete[] dcvdddddv;
 			}
-	
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 			/* CipherGD::encNLGDstep(encWData, encVData, encGrad, eta, cnum, pBits); */
 			NTL_EXEC_RANGE(cnum, first, last);
 			for (long i = first; i < last; ++i) {
-
 
 				if(encGrad[i].logp > encVData[i].logp) scheme.reScaleByAndEqual(encGrad[i], encGrad[i].logp-encVData[i].logp);
 				if(encGrad[i].logp < encVData[i].logp) scheme.reScaleByAndEqual(encVData[i], encVData[i].logp-encGrad[i].logp);
@@ -735,7 +704,7 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 			openFilePeakMEM << "," << (MyTools::getPeakRSS() >> 20);
 			openFilePeakMEM.flush();
 
-			for (long i = 0; i < cnum; ++i)
+			for (long i = 0; i < rnum*cnum; ++i)
 				encZData[i].kill();
 			delete[] encZData;
 
