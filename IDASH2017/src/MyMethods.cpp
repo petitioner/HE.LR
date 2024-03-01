@@ -31,7 +31,7 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 	long wBits = 30;
 	long pBits = 20;
 
-	long logN = MyTools::suggestLogN(80, logQ);
+	//long logN = MyTools::suggestLogN(80, logQ);
 	long logN = 16;
     long logQ = 990; // 991.300840336 > logQ  to ensure 128-bit security level. Security Parameter λ
 	long slots = 1 << (logN - 1);
@@ -889,7 +889,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 	long wBits = 30;
 	long pBits = 20;
 
-	long logN = MyTools::suggestLogN(80, logQ);
+	//long logN = MyTools::suggestLogN(80, logQ);
 	long logN = 16;
     long logQ = 990; // 991.300840336 > logQ  to ensure 128-bit security level. Security Parameter λ
 	long slots = 1 << (logN - 1);
@@ -1160,7 +1160,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 	}
 	scheme.encrypt(encXyZdata[(rnum - 1) * cnum + cnum - 1], pzDatra, slots,
 			wBits, logQ);
-	SerializationUtils::writeCiphertext(encXyZdata[r * cnum + i], "encXyZdata[]"+ std::to_string(r * cnum + i) +"].txt");
+	SerializationUtils::writeCiphertext(encXyZdata[(rnum - 1) * cnum + cnum - 1], "encXyZdata[]"+ std::to_string((rnum - 1) * cnum + cnum - 1) +"].txt");
 	delete[] pzDatra;
 	timeutils.stop("encXyZdata encryption");
 
@@ -1239,7 +1239,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 				pzData3[batch * j + l].imag(0);
 			}
 		}
-		scheme.encrypt(, pzData3, slots, wBits,
+		scheme.encrypt(encBinv[r * cnum + cnum - 1], pzData3, slots, wBits,
 				logQ);
 		SerializationUtils::writeCiphertext(encBinv[r * cnum + cnum - 1], "encBinv[]"+ std::to_string(r * cnum + cnum - 1) +"].txt");
 
