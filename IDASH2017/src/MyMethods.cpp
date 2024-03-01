@@ -319,7 +319,7 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 			trainSampleDim);
 	for (long r = 0; r < trainSampleDim; ++r)
 		for (long c = 0; c < factorDim; ++c)
-			Binv[r][c] = min(Binv[r][c], 32.); // overflow:: beyond the precision!!
+			Binv[r][c] = min(Binv[r][c], 8.); // overflow:: beyond the precision!!
 	timeutils.start("Encrypting Binv...");
 	// encrypt the traindata
 
@@ -1187,7 +1187,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 
 		for (long i = 0; i < minbatchsize; ++i) {
 			for (long j = 0; j < factorDim; ++j)
-				Binv[r * minbatchsize + i][j] = min(zTemp[i][j], 32.); // overflow:: beyond the precision!!
+				Binv[r * minbatchsize + i][j] = min(zTemp[i][j], 8.); // overflow:: beyond the precision!!
 		}
 		delete[] zInvB;
 		delete[] zTemp;
@@ -1204,7 +1204,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 
 	for (long i = 0; i < restrows; ++i) {
 		for (long j = 0; j < factorDim; ++j)
-			Binv[(rnum - 1) * minbatchsize + i][j] = min(zTemp[i][j], 32.); // overflow:: beyond the precision!!
+			Binv[(rnum - 1) * minbatchsize + i][j] = min(zTemp[i][j], 8.); // overflow:: beyond the precision!!
 	}
 	delete[] zInvB;
 	delete[] zTemp;
