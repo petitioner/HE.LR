@@ -44,10 +44,11 @@ int main(int argc, char **argv) {
 
 	string pathNesterovAGwithXTXasG =     "../result/20201123_FGCS";
 
-		   pathNesterovAGwithXTXasG.append("_MNIST");
-		   //pathNesterovAGwithXTXasG.append("_Credit");
+		   //pathNesterovAGwithXTXasG.append("_MNIST_");
+		   pathNesterovAGwithXTXasG.append("_Credit_");
 		   
-	pathNesterovAGwithXTXasG.append("_MiniBatch_");
+	//pathNesterovAGwithXTXasG.append("_MiniBatch_");
+	pathNesterovAGwithXTXasG.append("_FullBatch_");
 
 
 	// Step 1. clear the former result data stored in the four*3(AUC,MLE,TIME) different files.

@@ -32,6 +32,8 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 	long pBits = 20;
 
 	long logN = MyTools::suggestLogN(80, logQ);
+	long logN = 16;
+    long logQ = 990; // 991.300840336 > logQ  to ensure 128-bit security level. Security Parameter λ
 	long slots = 1 << (logN - 1);
 	long sBits = (long) ceil(log2(slots));
 	long fdimBits = (long) ceil(log2(factorDim));
@@ -888,6 +890,8 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 	long pBits = 20;
 
 	long logN = MyTools::suggestLogN(80, logQ);
+	long logN = 16;
+    long logQ = 990; // 991.300840336 > logQ  to ensure 128-bit security level. Security Parameter λ
 	long slots = 1 << (logN - 1);
 	long sBits = (long) ceil(log2(slots));
 	long fdimBits = (long) ceil(log2(factorDim));
