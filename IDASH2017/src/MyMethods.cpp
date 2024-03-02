@@ -458,9 +458,7 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 			auto x = abs(iterations / step_size - 2 * cycle + 1);
 			//base_lr + (max_lr - base_lr) * max(0, (1 - x)) *clrgamma**(iterations)
 			auto gamma = base_lr
-					+ (max_lr - base_lr) * max(0., (1 - x))
-							* pow(clr_gamma, iterations);
-			gamma = 1;
+					+ (max_lr - base_lr) * pow(E, -clr_gamma * iterations / (numIter*rnum) );
 
 
 			Ciphertext *encZData = new Ciphertext[rnum * cnum];
@@ -1361,7 +1359,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 	alpha0 = 0.01;
 	alpha1 = (1. + sqrt(1. + 4.0 * alpha0 * alpha0)) / 2.0;
 	//CyclicLR
-	double base_lr = 0.20;
+	double base_lr = 1.00;
 	double max_lr = 2.00;
 	long step_size = 64;
 	// string mode = 'exp_range'
@@ -1398,9 +1396,9 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 			auto x = abs(iterations / step_size - 2 * cycle + 1);
 			//base_lr + (max_lr - base_lr) * max(0, (1 - x)) *clrgamma**(iterations)
 			auto gamma = base_lr
-					+ (max_lr - base_lr) * max(0., (1 - x))
-							* pow(clr_gamma, iterations);
-			gamma = 1;
+					+ (max_lr - base_lr) * pow(E, -clr_gamma * iterations / (numIter*rnum) );
+
+
 
 			/* cipherGD.encZData(encZData, zDataTrain, slots, factorDim, trainSampleDim, batch, cnum, wBits, logQ);  */
 			Ciphertext *encZData = new Ciphertext[cnum];
