@@ -392,7 +392,7 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 	NTL_EXEC_RANGE(cnum, first, last);
 	for (long i = first; i < last; ++i) {
 		// scheme.encryptZeros(encWData[i], slots, wBits, encZData[0].logq); // To Make encVData[0].logq==encZData[0].logq
-		scheme.encryptSingle(encWData[i], 0.123, wBits, logQ);
+		scheme.encryptSingle(encWData[i], 0.0, wBits, logQ);
 		encWData[i].n = slots;
 
 		encVData[i].copy(encWData[i]);
@@ -1330,7 +1330,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 	NTL_EXEC_RANGE(cnum, first, last);
 	for (long i = first; i < last; ++i) {
 		// scheme.encryptZeros(encWData[i], slots, wBits, encZData[0].logq); // To Make encVData[0].logq==encZData[0].logq
-		scheme.encryptSingle(encWData[i], 0.123, wBits, logQ);
+		scheme.encryptSingle(encWData[i], 0.0, wBits, logQ);
 		encWData[i].n = slots;
 
 		encVData[i].copy(encWData[i]);
