@@ -38,11 +38,11 @@
 ////////////////////////////////////////////////////////////////////////////////////
 //static double degree1[2] = {0.5,0.25};
 // y = 0.5  +  0.15012 x^1  -  0.0015930078125 x^3 (0.001593008)                polyfit(x,y,3)
-//static double degree3[3] = {+0.5, -0.15012, +0.00159300781};  // 1 - poly(-yWTx)
+static double degree3[3] = {+0.5, -0.15012, +0.00159300781};  // 1 - poly(-yWTx)
 
 
 //static double degree3[4] = {0.5,-0.15012,0.0,0.001593}; //> ~ 1 / (1 + exp(x)) (LSFitting with bnd [-8,8])
-static double degree3[3] = {0.5,-0.0843,0.0002}; //> ~ 1/ (1 + exp(x)) (LSFitting with bnd [-16,16])
+//static double degree3[3] = {0.5,-0.0843,0.0002}; //> ~ 1/ (1 + exp(x)) (LSFitting with bnd [-16,16])
 
 
 
