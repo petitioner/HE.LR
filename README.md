@@ -3,6 +3,50 @@
 
 
 # HE.LR
+```shell
+
+Ubuntu 2024.04  comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+root@vultr:~# sudo swapoff /swapfile
+root@vultr:~# sudo fallocate -l 16G /swapfile
+root@vultr:~# sudo mkswap /swapfile
+root@vultr:~# sudo swapon /swapfile
+root@vultr:~# cd ..
+root@vultr:/# ls
+root@vultr:/# cd home/
+root@vultr:/home# mkdir sunly
+root@vultr:/home# cd sunly/
+root@vultr:/home/sunly# mkdir Downloads
+root@vultr:/home/sunly# cd Downloads/
+root@vultr:/home/sunly/Downloads# mkdir IDASH2017-master
+root@vultr:/home/sunly/Downloads# cd IDASH2017-master/
+root@vultr:/home/sunly/Downloads/IDASH2017-master# ls
+IDASH2017.zip
+root@vultr:/home/sunly/Downloads/IDASH2017-master# unzip IDASH2017.zip 
+
+root@vultr:/home/sunly/Downloads/IDASH2017-master# cd IDASH2017/
+root@vultr:/home/sunly/Downloads/IDASH2017-master/IDASH2017# cd lib/lib/
+root@vultr:/home/sunly/Downloads/IDASH2017-master/IDASH2017/lib/lib# ls
+README.md  libgmp.a  libgmpxx.a  libntl.a.zip
+root@vultr:/home/sunly/Downloads/IDASH2017-master/IDASH2017/lib/lib# unzip libntl.a.zip 
+Archive:  libntl.a.zip
+  inflating: libntl.a                
+root@vultr:/home/sunly/Downloads/IDASH2017-master/IDASH2017/lib/lib# cd ..
+root@vultr:/home/sunly/Downloads/IDASH2017-master/IDASH2017/lib# cd ..
+root@vultr:/home/sunly/Downloads/IDASH2017-master/IDASH2017# cd Default/
+root@vultr:/home/sunly/Downloads/IDASH2017-master/IDASH2017/Default# make clean 
+root@vultr:/home/sunly/Downloads/IDASH2017-master/IDASH2017/Default# make all
+
+
+66.135.23.150
+
+B=g2Fn_n@Nxa}ME!
+
+sftp://root@66.135.23.150
+```
+
+
 # How to run it:
 ```cpp        
 Step 0: Clone the GitHub Repository
