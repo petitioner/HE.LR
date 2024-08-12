@@ -24,16 +24,16 @@
 #include <unistd.h>
 
 double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
-		double *trainlabel, long factorDim, long trainSampleDim, long numIter,
-		double **testdata, double *testlabel, long testSampleDim,
-		string resultpath) {
+        double *trainlabel, long factorDim, long trainSampleDim, long Epoch_Number,
+        double **testdata, double *testlabel, long testSampleDim,
+        string resultpath) {
 
 	long wBits = 30;
 	long pBits = 20;
 
 	//long logN = MyTools::suggestLogN(80, logQ);
 	long logN = 16;
-    long logQ = 990; // 991.300840336 > logQ  to ensure 128-bit security level. Security Parameter λ
+	long logQ = 275; // 991.300840336 > logQ  to ensure 128-bit security level. Security Parameter λ
 	long slots = 1 << (logN - 1);
 	long sBits = (long) ceil(log2(slots));
 	long fdimBits = (long) ceil(log2(factorDim));
@@ -65,29 +65,29 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 	cout << "slots = " << slots << ", batch = " << batch << endl;
 	cout << "rnum = " << rnum << ", cnum = " << cnum << endl;
 	cout << "min-batch size = " << minbatchsize << ", minBatchDimBits = "
-			<< minBatchDimBits << endl;
+	     << minBatchDimBits << endl;
 
 	string path = resultpath;
 	ofstream openFileTrainAUC(path + "TrainAUC.csv",
-			std::ofstream::out | std::ofstream::app);
+	                          std::ofstream::out | std::ofstream::app);
 	ofstream openFileTrainACC(path + "TrainACC.csv",
-			std::ofstream::out | std::ofstream::app);
+	                          std::ofstream::out | std::ofstream::app);
 	ofstream openFileTrainMLE(path + "TrainMLE.csv",
-			std::ofstream::out | std::ofstream::app);
+	                          std::ofstream::out | std::ofstream::app);
 	ofstream openFileTestAUC(path + "TestAUC.csv",
-			std::ofstream::out | std::ofstream::app);
+	                         std::ofstream::out | std::ofstream::app);
 	ofstream openFileTestACC(path + "TestACC.csv",
-			std::ofstream::out | std::ofstream::app);
+	                         std::ofstream::out | std::ofstream::app);
 	ofstream openFileTestMLE(path + "TestMLE.csv",
-			std::ofstream::out | std::ofstream::app);
+	                         std::ofstream::out | std::ofstream::app);
 	ofstream openFileTIME(path + "TIME.csv",
-			std::ofstream::out | std::ofstream::app);
+	                      std::ofstream::out | std::ofstream::app);
 	ofstream openFileTIMELabel(path + "TIMELabel.csv",
-			std::ofstream::out | std::ofstream::app);
+	                           std::ofstream::out | std::ofstream::app);
 	ofstream openFileCurrMEM(path + "CurrMEM.csv",
-			std::ofstream::out | std::ofstream::app);
+	                         std::ofstream::out | std::ofstream::app);
 	ofstream openFilePeakMEM(path + "PeakMEM.csv",
-			std::ofstream::out | std::ofstream::app);
+	                         std::ofstream::out | std::ofstream::app);
 
 	if (!openFileTrainAUC.is_open())
 		cout << "Error: cannot read Train AUC file" << endl;
@@ -219,15 +219,15 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 			for (long j = 0; j < minbatchsize; ++j) {
 				for (long l = 0; l < batch; ++l) {
 					pzData[batch * j + l].real(
-							trainlabel[r * minbatchsize + j]
-									* traindata[r * minbatchsize + j][batch * i
-											+ l]);
+					    trainlabel[r * minbatchsize + j]
+					    * traindata[r * minbatchsize + j][batch * i
+					                                      + l]);
 					pzData[batch * j + l].imag(0);
 				}
 			}
 			scheme.encrypt(encXyZdata[r * cnum + i], pzData, slots, wBits,
-					logQ);
-			SerializationUtils::writeCiphertext(encXyZdata[r * cnum + i], "encXyZdata[]"+ std::to_string(r * cnum + i) +"].txt");
+			               logQ);
+			SerializationUtils::writeCiphertext(encXyZdata[r * cnum + i], "encXyZdata[" + std::to_string(r * cnum + i) + "].txt");
 		}
 		// i == cnum - 1       - the last cnum in each row
 		complex<double> *pzData = new complex<double> [slots]();
@@ -236,9 +236,9 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 
 			for (long l = 0; l < rest; ++l) {
 				pzData[batch * j + l].real(
-						trainlabel[r * minbatchsize + j]
-								* traindata[r * minbatchsize + j][batch
-										* (cnum - 1) + l]);
+				    trainlabel[r * minbatchsize + j]
+				    * traindata[r * minbatchsize + j][batch
+				                                      * (cnum - 1) + l]);
 				pzData[batch * j + l].imag(0);
 			}
 			for (long l = rest; l < batch; ++l) {
@@ -247,8 +247,8 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 			}
 		}
 		scheme.encrypt(encXyZdata[r * cnum + cnum - 1], pzData, slots, wBits,
-				logQ);
-		SerializationUtils::writeCiphertext(encXyZdata[r * cnum + cnum - 1], "encXyZdata[]"+ std::to_string(r * cnum + cnum - 1) +"].txt");
+		               logQ);
+		SerializationUtils::writeCiphertext(encXyZdata[r * cnum + cnum - 1], "encXyZdata[" + std::to_string(r * cnum + cnum - 1) + "].txt");
 
 	}
 	// The last min-batch may consists of several ( trainSampleDim - minbatchsize * (rnum-1) ) rows of zeors.
@@ -261,9 +261,9 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 		for (long j = 0; j < restrownum; ++j) {
 			for (long l = 0; l < batch; ++l) {
 				pzData[batch * j + l].real(
-						trainlabel[(rnum - 1) * minbatchsize + j]
-								* traindata[(rnum - 1) * minbatchsize + j][batch
-										* i + l]);
+				    trainlabel[(rnum - 1) * minbatchsize + j]
+				    * traindata[(rnum - 1) * minbatchsize + j][batch
+				            * i + l]);
 				pzData[batch * j + l].imag(0);
 			}
 		}
@@ -274,8 +274,8 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 			}
 		}
 		scheme.encrypt(encXyZdata[(rnum - 1) * cnum + i], pzData, slots, wBits,
-				logQ);
-		SerializationUtils::writeCiphertext(encXyZdata[(rnum - 1) * cnum + i], "encXyZdata[]"+ std::to_string((rnum - 1) * cnum + i) +"].txt");
+		               logQ);
+		SerializationUtils::writeCiphertext(encXyZdata[(rnum - 1) * cnum + i], "encXyZdata[" + std::to_string((rnum - 1) * cnum + i) + "].txt");
 	}
 	// i == cnum - 1       - the last cnum in each row
 	complex<double> *pzDatra = new complex<double> [slots]();
@@ -283,9 +283,9 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 		long rest = factorDim - batch * (cnum - 1);
 		for (long l = 0; l < rest; ++l) {
 			pzDatra[batch * j + l].real(
-					trainlabel[(rnum - 1) * minbatchsize + j]
-							* traindata[(rnum - 1) * minbatchsize + j][batch
-									* (cnum - 1) + l]);
+			    trainlabel[(rnum - 1) * minbatchsize + j]
+			    * traindata[(rnum - 1) * minbatchsize + j][batch
+			            * (cnum - 1) + l]);
 			pzDatra[batch * j + l].imag(0);
 		}
 		for (long l = rest; l < batch; ++l) {
@@ -301,8 +301,8 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 		}
 	}
 	scheme.encrypt(encXyZdata[(rnum - 1) * cnum + cnum - 1], pzDatra, slots,
-			wBits, logQ);
-	SerializationUtils::writeCiphertext(encXyZdata[(rnum - 1) * cnum + cnum - 1], "encXyZdata[]"+ std::to_string((rnum - 1) * cnum + cnum - 1) +"].txt");
+	               wBits, logQ);
+	SerializationUtils::writeCiphertext(encXyZdata[(rnum - 1) * cnum + cnum - 1], "encXyZdata[" + std::to_string((rnum - 1) * cnum + cnum - 1) + "].txt");
 	delete[] pzDatra;
 	timeutils.stop("encXyZdata encryption");
 
@@ -316,44 +316,44 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 	openFilePeakMEM.flush();
 
 	double **Binv = MyTools::zInvBFromFile(traindata, factorDim,
-			trainSampleDim);
+	                                       trainSampleDim);
 	for (long r = 0; r < trainSampleDim; ++r)
 		for (long c = 0; c < factorDim; ++c)
 			Binv[r][c] = min(Binv[r][c], 8.); // overflow:: beyond the precision!!
 	timeutils.start("Encrypting Binv...");
 	// encrypt the traindata
 
-		for (long i = 0; i < cnum - 1; ++i) {
+	for (long i = 0; i < cnum - 1; ++i) {
 
-			complex<double> *pzData = new complex<double> [slots]();
-			for (long j = 0; j < minbatchsize; ++j) {
-				for (long l = 0; l < batch; ++l) {
-					pzData[batch * j + l].real(
-							Binv[j][batch * i + l]);
-					pzData[batch * j + l].imag(0);
-				}
-			}
-			scheme.encrypt(encBinv[i], pzData, slots, wBits, logQ);
-			SerializationUtils::writeCiphertext(encBinv[i], "encBinv[i]"+ std::to_string(i) +"].txt");
-		}
-		// i == cnum - 1       - the last cnum in each row
-		complex<double> *pzData3 = new complex<double> [slots]();
+		complex<double> *pzData = new complex<double> [slots]();
 		for (long j = 0; j < minbatchsize; ++j) {
-			long rest = factorDim - batch * (cnum - 1);
-
-			for (long l = 0; l < rest; ++l) {
-				pzData3[batch * j + l].real(
-						Binv[j][batch * (cnum - 1) + l]);
-				pzData3[batch * j + l].imag(0);
-			}
-			for (long l = rest; l < batch; ++l) {
-				pzData3[batch * j + l].real(0);
-				pzData3[batch * j + l].imag(0);
+			for (long l = 0; l < batch; ++l) {
+				pzData[batch * j + l].real(
+				    Binv[j][batch * i + l]);
+				pzData[batch * j + l].imag(0);
 			}
 		}
-		scheme.encrypt(encBinv[cnum - 1], pzData3, slots, wBits,
-				logQ);
-		SerializationUtils::writeCiphertext(encBinv[cnum - 1], "encBinv[]"+ std::to_string(cnum - 1) +"].txt");
+		scheme.encrypt(encBinv[i], pzData, slots, wBits, logQ);
+		SerializationUtils::writeCiphertext(encBinv[i], "encBinv[" + std::to_string(i) + "].txt");
+	}
+	// i == cnum - 1       - the last cnum in each row
+	complex<double> *pzData3 = new complex<double> [slots]();
+	for (long j = 0; j < minbatchsize; ++j) {
+		long rest = factorDim - batch * (cnum - 1);
+
+		for (long l = 0; l < rest; ++l) {
+			pzData3[batch * j + l].real(
+			    Binv[j][batch * (cnum - 1) + l]);
+			pzData3[batch * j + l].imag(0);
+		}
+		for (long l = rest; l < batch; ++l) {
+			pzData3[batch * j + l].real(0);
+			pzData3[batch * j + l].imag(0);
+		}
+	}
+	scheme.encrypt(encBinv[cnum - 1], pzData3, slots, wBits,
+	               logQ);
+	SerializationUtils::writeCiphertext(encBinv[cnum - 1], "encBinv[" + std::to_string(cnum - 1) + "].txt");
 
 	timeutils.stop("Binv encryption");
 
@@ -366,7 +366,7 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 	openFilePeakMEM << "," << (MyTools::getPeakRSS() >> 20);
 	openFilePeakMEM.flush();
 
-	// zDataTrain and zDataTest are used for testing in the plaintext environment 
+	// zDataTrain and zDataTest are used for testing in the plaintext environment
 	// zData = (Y,Y@X)
 	double **zDataTrain = new double*[trainSampleDim];
 	for (int i = 0; i < trainSampleDim; ++i) {
@@ -416,19 +416,39 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 	//                        Client sent (encTrainData, encTrainLabel, enc(x0), encWData, and encVData) to Server                        //
 	//                                                                                                                                    //
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////// From now on, the server starts its work on what client sent to it. //////////////////////////////////	
+	////////////////////////////////// From now on, the server starts its work on what client sent to it. //////////////////////////////////
+	cout << endl << endl << endl << endl << "scheme.leftRotKeyMap.size() = " << scheme.leftRotKeyMap.size() << endl << endl << endl << endl;
+	cout << endl << endl << endl << endl;
+	double min_lr = 1.0;
+	double max_lr = 2.0;
+	double total_steps = Epoch_Number * rnum;
+	double exp_gamma = 2.5;
+	cout << "min_lr = " << min_lr << endl;
+	cout << "max_lr = " << max_lr << endl;
+	cout << "total_steps = " << total_steps << endl;
+	cout << "exp_gamma = " << exp_gamma << endl;
+	cout << "len(Xminbatches) = rnum = " << rnum << endl;
+	cout << endl << endl << endl << endl;
+
+	double totalUpdatingWeightsTime = 0.0;
+	double totalUpdatingWeights = 0.0;
+	double totalRefreshingWeightsTime = 0.0;
+	double totalBootstrappingOperations = 0.0;
+
+
+
+
 	double alpha0, alpha1, eta, gamma;
 	double enccor, encauc, truecor, trueauc;
 
 	alpha0 = 0.01;
 	alpha1 = (1. + sqrt(1. + 4.0 * alpha0 * alpha0)) / 2.0;
-	//CyclicLR
-	double base_lr = 0.20;
-	double max_lr = 2.00;
-	long step_size = 64;
-	// string mode = 'exp_range'
-	double clr_gamma = 0.9;
-	for (long iter = 0; iter < numIter; ++iter) {
+
+	unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+	cout << endl << "unsigned seed = chrono::system_clock::now().time_since_epoch().count();";
+	cout << endl << "unsigned seed = " << (unsigned)seed << endl;
+
+	for (long iter = 0; iter < Epoch_Number; ++iter) {
 
 		vector<int> randr;
 		for (int ir = 0; ir < rnum; ++ir)
@@ -437,7 +457,7 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 		for (int &x : randr)
 			cout << ' ' << x;
 		cout << '\n';
-		unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+
 		shuffle(randr.begin(), randr.end(), default_random_engine(seed));
 		cout << "randr[]: ";
 		for (int &x : randr)
@@ -446,24 +466,23 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 
 		//cout << endl << "NesterovWithG : "+ to_string(iter+1)+" -th iteration" << endl;
 		for (long r = 0; r < rnum; ++r) {
-			timeutils.start(
-					"NesterovWithGminBatch : " + to_string(iter + 1)
-							+ " -th iteration");
+			timeutils.start("NesterovWithGminBatch : " + to_string(iter + 1) + " -th iteration");
+			auto start_timeUpdatingWeights = std::chrono::high_resolution_clock::now();
+
+			cout << endl << endl << endl << endl << "encVData[0].logq = "
+			     << encVData[0].logq << endl << endl << endl << endl;
 
 
 			eta = (1 - alpha0) / alpha1;
 
 			auto iterations = iter * rnum + r;
-			auto cycle = floor(1 + iterations / (2 * step_size));
-			auto x = abs(iterations / step_size - 2 * cycle + 1);
-			//base_lr + (max_lr - base_lr) * max(0, (1 - x)) *clrgamma**(iterations)
-			auto gamma = base_lr
-					+ (max_lr - base_lr) * pow(E, -clr_gamma * iterations / (numIter*rnum) );
+			// self.max_lr - (self.max_lr - self.min_lr) * (self.current_step / self.total_steps)**self.gamma
+			auto gamma = max_lr - (max_lr - min_lr) * pow(iterations / total_steps, exp_gamma );
 
 
 			Ciphertext *encZData = new Ciphertext[rnum * cnum];
-			NTL_EXEC_RANGE(rnum*cnum, first, last);
-			for(long i = first; i < last; ++i) {
+			NTL_EXEC_RANGE(rnum * cnum, first, last);
+			for (long i = first; i < last; ++i) {
 				//encZData[i].copy(encXyZdata[randr[r] * cnum + i]);
 				encZData[i].copy(encXyZdata[i]);
 			}
@@ -471,18 +490,18 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 			Ciphertext *encIPvec = new Ciphertext[rnum * cnum];
 
 			/* For Each Batch, Sum Itself Inside */
-			NTL_EXEC_RANGE(rnum*cnum, first, last);
+			NTL_EXEC_RANGE(rnum * cnum, first, last);
 			for (long i = first; i < last; ++i) {
 				// MAKE SURE : encZData[i].logq >= encVData[i].logq (and of course : encZData[i].logp == encVData[i].logp)
 				encIPvec[i].copy(encZData[i]);
-				if (encIPvec[i].logq > encVData[i%cnum].logq) { //cout << "FF" << endl;
-					scheme.modDownToAndEqual(encIPvec[i], encVData[i%cnum].logq);
+				if (encIPvec[i].logq > encVData[i % cnum].logq) { //cout << "FF" << endl;
+					scheme.modDownToAndEqual(encIPvec[i], encVData[i % cnum].logq);
 				}
-				if (encIPvec[i].logq < encVData[i%cnum].logq) { //cout << "EE" << endl;
-					scheme.modDownToAndEqual(encVData[i%cnum], encIPvec[i].logq);
+				if (encIPvec[i].logq < encVData[i % cnum].logq) { //cout << "EE" << endl;
+					scheme.modDownToAndEqual(encVData[i % cnum], encIPvec[i].logq);
 				}
 				// V is the final weights to store the result weights.
-				scheme.multAndEqual(encIPvec[i], encVData[i%cnum]);// encIPvec = ENC(zData) .* ENC(V)
+				scheme.multAndEqual(encIPvec[i], encVData[i % cnum]); // encIPvec = ENC(zData) .* ENC(V)
 
 			}
 			NTL_EXEC_RANGE_END
@@ -492,10 +511,10 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 
 			NTL_EXEC_RANGE(rnum, first, last);
 			for (long i = first; i < last; ++i) {
-				encIP[i].copy(encIPvec[i*cnum]); // to store the sum of all batches
+				encIP[i].copy(encIPvec[i * cnum]); // to store the sum of all batches
 
 				for (long c = 1; c < cnum; ++c) {
-					scheme.addAndEqual(encIP[i], encIPvec[i*cnum + c]);
+					scheme.addAndEqual(encIP[i], encIPvec[i * cnum + c]);
 				}
 
 				/* For Each Batch (==ciphertext), Sum Itself Inside, Result in Each Row consisting of the same value */
@@ -524,31 +543,31 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 			for (long i = 0; i < rnum * cnum; ++i)
 				encIPvec[i].kill();
 			delete[] encIPvec;
-			//CipherGD::encInnerProduct(encIP, encZData, encVData, rpoly, cnum, bBits, wBits, pBits); 
+			//CipherGD::encInnerProduct(encIP, encZData, encVData, rpoly, cnum, bBits, wBits, pBits);
 
 
 			Ciphertext *encGrad = new Ciphertext[cnum];
-	NTL_EXEC_RANGE(cnum, first, last);
-	for (long i = first; i < last; ++i) {
-		scheme.encryptSingle(encGrad[i], 0.0, wBits, logQ);
-		encGrad[i].n = slots;
-	}
-	NTL_EXEC_RANGE_END
-			
+			NTL_EXEC_RANGE(cnum, first, last);
+			for (long i = first; i < last; ++i) {
+				scheme.encryptSingle(encGrad[i], 0.0, wBits, logQ);
+				encGrad[i].n = slots;
+			}
+			NTL_EXEC_RANGE_END
+
 
 			//////////////////////////////////////// when iteration < 05 ////////////////////////////////////////
-				cout << endl << "INSIDE iter < 5;  poly3 = ";
-				cout << setiosflags(ios::showpos) << degree3[0] << " ";
-				cout << setiosflags(ios::showpos) << degree3[1] << "x ";
-				cout << setiosflags(ios::showpos) << degree3[2] << "x^3 "
-						<< endl << endl;
-				cout << std::noshowpos;
-				cout << "gamma = " << gamma << endl << endl << endl;
+			cout << endl << "INSIDE iter < 5;  poly3 = ";
+			cout << setiosflags(ios::showpos) << degree3[0] << " ";
+			cout << setiosflags(ios::showpos) << degree3[1] << "x ";
+			cout << setiosflags(ios::showpos) << degree3[2] << "x^3 "
+			     << endl << endl;
+			cout << std::noshowpos;
+			cout << "gamma = " << gamma << endl << endl << endl;
 
 
-			for (long r = 0; r < rnum; ++r) 
-			//NTL_EXEC_RANGE(rnum, first, last);
-			//for (long r = first; r < last; ++r) 
+			for (long r = 0; r < rnum; ++r)
+				//NTL_EXEC_RANGE(rnum, first, last);
+				//for (long r = first; r < last; ++r)
 			{
 
 				/* CipherGD::encSigmoid(kdeg, encZData, encGrad, encIP, cnum, gamma, sBits, bBits, wBits, aBits); */
@@ -560,7 +579,7 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 				scheme.reScaleByAndEqual(encIP2, encIP[r].logp); // For now, encIP.logp is big enough
 
 				scheme.addConstAndEqual(encIP2, degree3[1] / degree3[2],
-						encIP2.logp);                // encIP2 = a/b + yWTx*yWTx
+				                        encIP2.logp);                // encIP2 = a/b + yWTx*yWTx
 
 				NTL_EXEC_RANGE(cnum, first, last);
 				//long first = 0, last = cnum;
@@ -568,29 +587,29 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 
 					Ciphertext encGradtemp;
 
-					scheme.multByConst(encGradtemp, encZData[r*cnum + i], (gamma) * degree3[2], wBits+pBits);
+					scheme.multByConst(encGradtemp, encZData[r * cnum + i], (gamma) * degree3[2], wBits + pBits);
 
 					scheme.reScaleByAndEqual(encGradtemp, pBits); // encGrad = Y@X *gamma * b
 
 					Ciphertext ctIP(encIP[r]);
 					if (encGradtemp.logq > ctIP.logq)
-					scheme.modDownToAndEqual(encGradtemp, ctIP.logq); /* whose logq should be ... */
+						scheme.modDownToAndEqual(encGradtemp, ctIP.logq); /* whose logq should be ... */
 					if (encGradtemp.logq < ctIP.logq)
-					scheme.modDownToAndEqual(ctIP, encGradtemp.logq);
+						scheme.modDownToAndEqual(ctIP, encGradtemp.logq);
 
 					scheme.multAndEqual(encGradtemp, ctIP); // encGrad = gamma * Y@X * b * yWTx
 					scheme.reScaleByAndEqual(encGradtemp, ctIP.logp);
 
 					Ciphertext ctIP2(encIP2);
-					if(encGradtemp.logq > ctIP2.logq)
-					scheme.modDownToAndEqual(encGradtemp, ctIP2.logq);
-					if(encGradtemp.logq < ctIP2.logq)
-					scheme.modDownToAndEqual(ctIP2, encGradtemp.logq);
+					if (encGradtemp.logq > ctIP2.logq)
+						scheme.modDownToAndEqual(encGradtemp, ctIP2.logq);
+					if (encGradtemp.logq < ctIP2.logq)
+						scheme.modDownToAndEqual(ctIP2, encGradtemp.logq);
 					scheme.multAndEqual(encGradtemp, ctIP2);// encGrad = gamma * Y@X * (a * yWTx + b * yWTx ^3)
 					scheme.reScaleByAndEqual(encGradtemp, ctIP2.logp);
 
 					Ciphertext tmp;
-					scheme.multByConst(tmp, encZData[r*cnum + i], (gamma) * degree3[0], wBits);// tmp = Y@X * gamma * 0.5
+					scheme.multByConst(tmp, encZData[r * cnum + i], (gamma) * degree3[0], wBits); // tmp = Y@X * gamma * 0.5
 
 					scheme.modDownToAndEqual(tmp, encGradtemp.logq);// encGrad[i].logq == tmp.logq
 
@@ -598,15 +617,15 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 
 
 
-					if(encGrad[i].logp > encGradtemp.logp) 
-						scheme.reScaleByAndEqual(encGrad[i], encGrad[i].logp-encGradtemp.logp);
-					if(encGrad[i].logp < encGradtemp.logp) 
-						scheme.reScaleByAndEqual(encGradtemp, encGradtemp.logp-encGrad[i].logp);
-					if (encGrad[i].logq > encGradtemp.logq) 
+					if (encGrad[i].logp > encGradtemp.logp)
+						scheme.reScaleByAndEqual(encGrad[i], encGrad[i].logp - encGradtemp.logp);
+					if (encGrad[i].logp < encGradtemp.logp)
+						scheme.reScaleByAndEqual(encGradtemp, encGradtemp.logp - encGrad[i].logp);
+					if (encGrad[i].logq > encGradtemp.logq)
 						scheme.modDownToAndEqual(encGrad[i], encGradtemp.logq);
-					if (encGrad[i].logq < encGradtemp.logq) 
+					if (encGrad[i].logq < encGradtemp.logq)
 						scheme.modDownToAndEqual(encGradtemp, encGrad[i].logq);
-					if (encGrad[i].logp != encGradtemp.logp) {cout << "logp != logp";exit(0);}
+					if (encGrad[i].logp != encGradtemp.logp) {cout << "logp != logp"; exit(0);}
 
 					scheme.addAndEqual(encGrad[i], encGradtemp);
 
@@ -623,7 +642,7 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 				//encIP.kill();
 			}
 			//NTL_EXEC_RANGE_END Bugs Found Here ！
-			
+
 			for (long kk = 0; kk < rnum; ++kk) encIP[kk].kill();
 
 			// Sum Each Column of encGrad[i] To Get the Final gradient : (1 - sigm(yWTx)) * Y.T @ X
@@ -637,9 +656,9 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 
 				Ciphertext ctBinv(encBinv[i]); ////~~~~~~//~~~~~~//~~~~~~//~~~~~~//~~~~~~//~~~~~~//~~~~~~
 				if (encGrad[i].logq > ctBinv.logq)
-				scheme.modDownToAndEqual(encGrad[i], ctBinv.logq);
+					scheme.modDownToAndEqual(encGrad[i], ctBinv.logq);
 				if (encGrad[i].logq < ctBinv.logq)
-				scheme.modDownToAndEqual(ctBinv, encGrad[i].logq);
+					scheme.modDownToAndEqual(ctBinv, encGrad[i].logq);
 
 				scheme.multAndEqual(encGrad[i], ctBinv);
 				scheme.reScaleByAndEqual(encGrad[i], ctBinv.logp);
@@ -656,12 +675,12 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 			cout << endl << "Quadratic Gradient: " << endl ;
 			for (long c = 0; c < cnum; ++c) {
 				complex<double> *dcvdddddv = scheme.decrypt(secretKey, encGrad[c]);
-				for (long j = 0; j < batch; ++j) 
+				for (long j = 0; j < batch; ++j)
 					cout << setiosflags(ios::fixed) << setprecision(6) << dcvdddddv[j].real() << "\t";
 
 				delete[] dcvdddddv;
 			}
-	
+
 
 
 			/* CipherGD::encNLGDstep(encWData, encVData, encGrad, eta, cnum, pBits); */
@@ -669,13 +688,13 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 			for (long i = first; i < last; ++i) {
 
 
-				if(encGrad[i].logp > encVData[i].logp) scheme.reScaleByAndEqual(encGrad[i], encGrad[i].logp-encVData[i].logp);
-				if(encGrad[i].logp < encVData[i].logp) scheme.reScaleByAndEqual(encVData[i], encVData[i].logp-encGrad[i].logp);
+				if (encGrad[i].logp > encVData[i].logp) scheme.reScaleByAndEqual(encGrad[i], encGrad[i].logp - encVData[i].logp);
+				if (encGrad[i].logp < encVData[i].logp) scheme.reScaleByAndEqual(encVData[i], encVData[i].logp - encGrad[i].logp);
 				scheme.modDownToAndEqual(encVData[i], encGrad[i].logq);
 
 				Ciphertext ctmpw;
 				scheme.add(ctmpw, encVData[i], encGrad[i]); // encGrad[i] has already self-multiplied with gamma
-															// ctmpw = encVData[i] - encGrad[i]
+				// ctmpw = encVData[i] - encGrad[i]
 
 				scheme.multByConst(encVData[i], ctmpw, 1. - eta, pBits);// encVData[i] = ( 1. - eta ) * ctmpw
 				//scheme.reScaleByAndEqual(encVData[i], pBits-5);
@@ -685,7 +704,7 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 
 				if (encWData[i].logq > encVData[i].logq) scheme.modDownToAndEqual(encWData[i], encVData[i].logq);
 				if (encWData[i].logq < encVData[i].logq) scheme.modDownToAndEqual(encVData[i], encWData[i].logq);
-				if (encWData[i].logp != encVData[i].logp) {cout << "logp != logp";exit(0);}
+				if (encWData[i].logp != encVData[i].logp) {cout << "logp != logp"; exit(0);}
 
 				scheme.addAndEqual(encVData[i], encWData[i]); // encVData[i] = encVData[i] + encWData[i]
 				// encVData[i] = ( 1. - eta ) * ctmpw + eta * encWData[i]
@@ -696,37 +715,42 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 				ctmpw.kill();
 			}
 			NTL_EXEC_RANGE_END
+
 			;
 			/* CipherGD::encNLGDstep(encWData, encVData, encGrad, eta, cnum, pBits); */
+
+	auto end_timeUpdatingWeights = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end_timeUpdatingWeights - start_timeUpdatingWeights;
+        totalUpdatingWeightsTime += duration.count();  // Returns the elapsed time in seconds
+        totalUpdatingWeights += 1;
+
 
 			for (long i = 0; i < cnum; ++i)
 				encGrad[i].kill();
 			delete[] encGrad;
 			/* cipherGD.encNLGDiteration(kdeg, encZData, encWData, encVData, rpoly, cnum, gamma, eta, sBits, bBits, wBits, pBits, aBits); */
 
-			timeutils.stop(
-					"NesterovWithG : " + to_string(iter + 1)
-							+ " -th iteration");
+			timeutils.stop("NesterovWithG : " + to_string(iter + 1)  + " -th iteration");
 
 			openFileTIME << "," << timeutils.timeElapsed;
 			openFileTIME.flush();
 			openFileTIMELabel << ","
-					<< "NesterovWithGminBatch : " + to_string(iter + 1)
-							+ " -th epoch." + to_string(r + 1)
-							+ "-th iteration";
+			                  << "NesterovWithGminBatch : " + to_string(iter + 1)
+			                  + " -th epoch." + to_string(r + 1)
+			                  + "-th iteration";
 			openFileTIMELabel.flush();
 			openFileCurrMEM << "," << (MyTools::getCurrentRSS() >> 20);
 			openFileCurrMEM.flush();
 			openFilePeakMEM << "," << (MyTools::getPeakRSS() >> 20);
 			openFilePeakMEM.flush();
 
-			for (long i = 0; i < rnum*cnum; ++i)
+			for (long i = 0; i < rnum * cnum; ++i)
 				encZData[i].kill();
 			delete[] encZData;
 
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			cout << endl << "---------- TEST : THE " << iter * rnum + r + 1
-					<< "-th ITERATION : Weights, AUC, MLE ----------" << endl;
+			     << "-th ITERATION : Weights, AUC, MLE ----------" << endl;
 			/* cipherGD.decWData(cwData, encWData, factorDim, batch, cnum, wBits);     */
 			for (long i = 0; i < (cnum - 1); ++i) {
 				complex<double> *dcvv = scheme.decrypt(secretKey, encVData[i]);
@@ -736,7 +760,7 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 				delete[] dcvv;
 			}
 			complex<double> *dcvv = scheme.decrypt(secretKey,
-					encVData[cnum - 1]);
+			                                       encVData[cnum - 1]);
 			long rest = factorDim - batch * (cnum - 1);
 			for (long j = 0; j < rest; ++j) {
 				cvData[batch * (cnum - 1) + j] = dcvv[j].real();
@@ -746,78 +770,102 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 			cout << "Current cWdata (encVData) : " << endl;
 			for (long i = 0; i < factorDim; ++i)
 				cout << setiosflags(ios::fixed) << setprecision(12) << cvData[i]
-						<< ",\t";
+				     << ",\t";
 			cout << endl;
 
 			openFileTestAUC << ","
-					<< MyTools::calculateAUC(zDataTest, cvData, factorDim,
-							testSampleDim, enccor, encauc);
+			                << MyTools::calculateAUC(zDataTest, cvData, factorDim,
+			                        testSampleDim, enccor, encauc);
 			openFileTestAUC.flush();
 			openFileTrainAUC << ","
-					<< MyTools::calculateAUC(zDataTrain, cvData, factorDim,
-							trainSampleDim, enccor, encauc);
+			                 << MyTools::calculateAUC(zDataTrain, cvData, factorDim,
+			                         trainSampleDim, enccor, encauc);
 			openFileTrainAUC.flush();
 
 			openFileTestACC << ","
-					<< MyTools::calculateACC(zDataTest, cvData, factorDim,
-							testSampleDim, enccor, encauc);
+			                << MyTools::calculateACC(zDataTest, cvData, factorDim,
+			                        testSampleDim, enccor, encauc);
 			openFileTestACC.flush();
 			openFileTrainACC << ","
-					<< MyTools::calculateACC(zDataTrain, cvData, factorDim,
-							trainSampleDim, enccor, encauc);
+			                 << MyTools::calculateACC(zDataTrain, cvData, factorDim,
+			                         trainSampleDim, enccor, encauc);
 			openFileTrainACC.flush();
 
 			openFileTestMLE << ","
-					<< MyTools::calculateMLE(zDataTest, cvData, factorDim,
-							testSampleDim, enccor, encauc);
+			                << MyTools::calculateMLE(zDataTest, cvData, factorDim,
+			                        testSampleDim, enccor, encauc);
 			openFileTestMLE.flush();
 			openFileTrainMLE << ","
-					<< MyTools::calculateMLE(zDataTrain, cvData, factorDim,
-							trainSampleDim, enccor, encauc);
+			                 << MyTools::calculateMLE(zDataTrain, cvData, factorDim,
+			                         trainSampleDim, enccor, encauc);
 			openFileTrainMLE.flush();
 
+			cout << endl << endl << endl << endl << endl;
+
+			cout << "TrainMLE : "
+			     << MyTools::calculateMLE(zDataTrain, cvData, factorDim,
+			                         trainSampleDim, enccor, encauc) << endl;
+			cout << "TrainAUC : "
+			     << MyTools::calculateAUC(zDataTrain, cvData, factorDim,
+			                         trainSampleDim, enccor, encauc) << endl;
+			cout << "TrainACC : "
+			     << MyTools::calculateACC(zDataTrain, cvData, factorDim,
+			                         trainSampleDim, enccor, encauc) << endl;
+			cout << endl;
 			cout << "Test MLE : "
-					<< MyTools::calculateMLE(zDataTest, cvData, factorDim,
-							testSampleDim, enccor, encauc) << endl;
+			     << MyTools::calculateMLE(zDataTest, cvData, factorDim,
+			                              testSampleDim, enccor, encauc) << endl;
 			cout << "Test AUC : "
-					<< MyTools::calculateAUC(zDataTest, cvData, factorDim,
-							testSampleDim, enccor, encauc) << endl;
+			     << MyTools::calculateAUC(zDataTest, cvData, factorDim,
+			                              testSampleDim, enccor, encauc) << endl;
 			cout << "Test ACC : "
-					<< MyTools::calculateACC(zDataTest, cvData, factorDim,
-							testSampleDim, enccor, encauc) << endl;
+			     << MyTools::calculateACC(zDataTest, cvData, factorDim,
+			                              testSampleDim, enccor, encauc) << endl;
 			cout << " ----------------- end of the " << (iter + 1)
-					<< "-th epoch ----------------- " << endl;
+			     << "-th epoch ----------------- " << endl;
 			cout << " ----------------- end of the " << (r + 1)
-					<< "-th iteration ----------------- " << endl << endl;
+			     << "-th iteration ----------------- " << endl << endl;
 			cout
-					<< "--------------------------------------------------------------------------------"
-					<< endl;
+			        << "--------------------------------------------------------------------------------"
+			        << endl;
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 			cout << endl << endl << endl << endl << "encVData[0].logq = "
-					<< encVData[0].logq << endl << endl << endl << endl;
+			     << encVData[0].logq << endl << endl << endl << endl;
+
+
+
+
 
 			if (encVData[0].logq < 220 + encVData[0].logp) {
-				//if ( encVData[0].logq <= 450 && iter < numIter-1 || encVData[0].logq < wBits && iter == numIter-1) {
+				//if ( encVData[0].logq <= 450 && iter < Epoch_Number-1 || encVData[0].logq < wBits && iter == Epoch_Number-1) {
 
 				timeutils.start("Use Bootstrap To Recrypt Ciphertext");
+				auto start_timeRefreshingWeights = std::chrono::high_resolution_clock::now();
 
 				NTL_EXEC_RANGE(cnum, first, last);
-				for(long i = first; i < last; ++i) {
+				for (long i = first; i < last; ++i) {
 					scheme.modDownToAndEqual(encWData[i], bootlogq);
 					encWData[i].n = batch;
-					scheme.bootstrapAndEqual(encWData[i], bootlogq, logQ, logT, logI);
+					scheme.bootstrapAndEqual(encWData[i], bootlogq, 990, logT, logI);
 					encWData[i].n = slots;
 				}
 				NTL_EXEC_RANGE_END
 				NTL_EXEC_RANGE(cnum, first, last);
-				for(long i = first; i < last; ++i) {
+				for (long i = first; i < last; ++i) {
 					scheme.modDownToAndEqual(encVData[i], bootlogq);
 					encVData[i].n = batch;
-					scheme.bootstrapAndEqual(encVData[i], bootlogq, logQ, logT, logI);
+					scheme.bootstrapAndEqual(encVData[i], bootlogq, 990, logT, logI);
 					encVData[i].n = slots;
 				}
 				NTL_EXEC_RANGE_END
+
+				auto end_timeRefreshingWeights = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duretion = end_timeRefreshingWeights - start_timeRefreshingWeights;
+        totalRefreshingWeightsTime += duretion.count();  // Returns the elapsed time in seconds
+        totalBootstrappingOperations += 1;
+
+
 
 				timeutils.stop("Use Bootstrap To Recrypt Ciphertext");
 
@@ -836,13 +884,19 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 			//             Over and Out                                                //
 			/////////////////////////////////////////////////////////////////////////////
 			cout
-					<< "--------------------------------------------------------------------------------"
-					<< endl << endl;
+			        << "--------------------------------------------------------------------------------"
+			        << endl << endl;
 
 			alpha0 = alpha1;
 			alpha1 = (1. + sqrt(1. + 4.0 * alpha0 * alpha0)) / 2.0;
 			cout << endl << " !!! STOP " << iter + 1 << " ITERATION !!! "
-					<< endl << endl;
+			     << endl << endl;
+			     			     	cout << endl << endl << endl << endl;
+			     	cout << "totalUpdatingWeightsTime = " << totalUpdatingWeightsTime << endl;
+			     	cout << "totalUpdatingWeights = " << totalUpdatingWeights << endl;
+				cout << "totalRefreshingWeightsTime = " << totalRefreshingWeightsTime << endl;
+				cout << "totalBootstrappingOperations = " << totalBootstrappingOperations << endl;
+				cout << endl << endl << endl << endl;
 		}
 	}
 
@@ -879,17 +933,20 @@ double* MyMethods::testCryptoFullBatchNAGwithG(double **traindata,
 	openFilePeakMEM.close();
 }
 
+
+
+
 double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
-		double *trainlabel, long factorDim, long trainSampleDim, long numIter,
-		double **testdata, double *testlabel, long testSampleDim,
-		string resultpath) {
+        double *trainlabel, long factorDim, long trainSampleDim, long Epoch_Number,
+        double **testdata, double *testlabel, long testSampleDim,
+        string resultpath) {
 
 	long wBits = 30;
 	long pBits = 20;
 
 	//long logN = MyTools::suggestLogN(80, logQ);
 	long logN = 16;
-    long logQ = 990; // 991.300840336 > logQ  to ensure 128-bit security level. Security Parameter λ
+	long logQ = 275; // 991.300840336 > logQ  to ensure 128-bit security level. Security Parameter λ
 	long slots = 1 << (logN - 1);
 	long sBits = (long) ceil(log2(slots));
 	long fdimBits = (long) ceil(log2(factorDim));
@@ -921,29 +978,29 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 	cout << "slots = " << slots << ", batch = " << batch << endl;
 	cout << "rnum = " << rnum << ", cnum = " << cnum << endl;
 	cout << "min-batch size = " << minbatchsize << ", minBatchDimBits = "
-			<< minBatchDimBits << endl;
+	     << minBatchDimBits << endl;
 
 	string path = resultpath;
 	ofstream openFileTrainAUC(path + "TrainAUC.csv",
-			std::ofstream::out | std::ofstream::app);
+	                          std::ofstream::out | std::ofstream::app);
 	ofstream openFileTrainACC(path + "TrainACC.csv",
-			std::ofstream::out | std::ofstream::app);
+	                          std::ofstream::out | std::ofstream::app);
 	ofstream openFileTrainMLE(path + "TrainMLE.csv",
-			std::ofstream::out | std::ofstream::app);
+	                          std::ofstream::out | std::ofstream::app);
 	ofstream openFileTestAUC(path + "TestAUC.csv",
-			std::ofstream::out | std::ofstream::app);
+	                         std::ofstream::out | std::ofstream::app);
 	ofstream openFileTestACC(path + "TestACC.csv",
-			std::ofstream::out | std::ofstream::app);
+	                         std::ofstream::out | std::ofstream::app);
 	ofstream openFileTestMLE(path + "TestMLE.csv",
-			std::ofstream::out | std::ofstream::app);
+	                         std::ofstream::out | std::ofstream::app);
 	ofstream openFileTIME(path + "TIME.csv",
-			std::ofstream::out | std::ofstream::app);
+	                      std::ofstream::out | std::ofstream::app);
 	ofstream openFileTIMELabel(path + "TIMELabel.csv",
-			std::ofstream::out | std::ofstream::app);
+	                           std::ofstream::out | std::ofstream::app);
 	ofstream openFileCurrMEM(path + "CurrMEM.csv",
-			std::ofstream::out | std::ofstream::app);
+	                         std::ofstream::out | std::ofstream::app);
 	ofstream openFilePeakMEM(path + "PeakMEM.csv",
-			std::ofstream::out | std::ofstream::app);
+	                         std::ofstream::out | std::ofstream::app);
 
 	if (!openFileTrainAUC.is_open())
 		cout << "Error: cannot read Train AUC file" << endl;
@@ -1075,15 +1132,15 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 			for (long j = 0; j < minbatchsize; ++j) {
 				for (long l = 0; l < batch; ++l) {
 					pzData[batch * j + l].real(
-							trainlabel[r * minbatchsize + j]
-									* traindata[r * minbatchsize + j][batch * i
-											+ l]);
+					    trainlabel[r * minbatchsize + j]
+					    * traindata[r * minbatchsize + j][batch * i
+					                                      + l]);
 					pzData[batch * j + l].imag(0);
 				}
 			}
 			scheme.encrypt(encXyZdata[r * cnum + i], pzData, slots, wBits,
-					logQ);
-			SerializationUtils::writeCiphertext(encXyZdata[r * cnum + i], "encXyZdata[]"+ std::to_string(r * cnum + i) +"].txt");
+			               logQ);
+			SerializationUtils::writeCiphertext(encXyZdata[r * cnum + i], "encXyZdata[" + std::to_string(r * cnum + i) + "].txt");
 		}
 		// i == cnum - 1       - the last cnum in each row
 		complex<double> *pzData = new complex<double> [slots]();
@@ -1092,9 +1149,9 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 
 			for (long l = 0; l < rest; ++l) {
 				pzData[batch * j + l].real(
-						trainlabel[r * minbatchsize + j]
-								* traindata[r * minbatchsize + j][batch
-										* (cnum - 1) + l]);
+				    trainlabel[r * minbatchsize + j]
+				    * traindata[r * minbatchsize + j][batch
+				                                      * (cnum - 1) + l]);
 				pzData[batch * j + l].imag(0);
 			}
 			for (long l = rest; l < batch; ++l) {
@@ -1103,8 +1160,8 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 			}
 		}
 		scheme.encrypt(encXyZdata[r * cnum + cnum - 1], pzData, slots, wBits,
-				logQ);
-		SerializationUtils::writeCiphertext(encXyZdata[r * cnum + cnum - 1], "encXyZdata[]"+ std::to_string(r * cnum + cnum - 1) +"].txt");
+		               logQ);
+		SerializationUtils::writeCiphertext(encXyZdata[r * cnum + cnum - 1], "encXyZdata[" + std::to_string(r * cnum + cnum - 1) + "].txt");
 
 	}
 	// The last min-batch may consists of several ( trainSampleDim - minbatchsize * (rnum-1) ) rows of zeors.
@@ -1117,9 +1174,9 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 		for (long j = 0; j < restrownum; ++j) {
 			for (long l = 0; l < batch; ++l) {
 				pzData[batch * j + l].real(
-						trainlabel[(rnum - 1) * minbatchsize + j]
-								* traindata[(rnum - 1) * minbatchsize + j][batch
-										* i + l]);
+				    trainlabel[(rnum - 1) * minbatchsize + j]
+				    * traindata[(rnum - 1) * minbatchsize + j][batch
+				            * i + l]);
 				pzData[batch * j + l].imag(0);
 			}
 		}
@@ -1130,8 +1187,8 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 			}
 		}
 		scheme.encrypt(encXyZdata[(rnum - 1) * cnum + i], pzData, slots, wBits,
-				logQ);
-		SerializationUtils::writeCiphertext(encXyZdata[(rnum - 1) * cnum + i], "encXyZdata[]"+ std::to_string((rnum - 1) * cnum + i) +"].txt");
+		               logQ);
+		SerializationUtils::writeCiphertext(encXyZdata[(rnum - 1) * cnum + i], "encXyZdata[" + std::to_string((rnum - 1) * cnum + i) + "].txt");
 	}
 	// i == cnum - 1       - the last cnum in each row
 	complex<double> *pzDatra = new complex<double> [slots]();
@@ -1139,9 +1196,9 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 		long rest = factorDim - batch * (cnum - 1);
 		for (long l = 0; l < rest; ++l) {
 			pzDatra[batch * j + l].real(
-					trainlabel[(rnum - 1) * minbatchsize + j]
-							* traindata[(rnum - 1) * minbatchsize + j][batch
-									* (cnum - 1) + l]);
+			    trainlabel[(rnum - 1) * minbatchsize + j]
+			    * traindata[(rnum - 1) * minbatchsize + j][batch
+			            * (cnum - 1) + l]);
 			pzDatra[batch * j + l].imag(0);
 		}
 		for (long l = rest; l < batch; ++l) {
@@ -1157,8 +1214,8 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 		}
 	}
 	scheme.encrypt(encXyZdata[(rnum - 1) * cnum + cnum - 1], pzDatra, slots,
-			wBits, logQ);
-	SerializationUtils::writeCiphertext(encXyZdata[(rnum - 1) * cnum + cnum - 1], "encXyZdata[]"+ std::to_string((rnum - 1) * cnum + cnum - 1) +"].txt");
+	               wBits, logQ);
+	SerializationUtils::writeCiphertext(encXyZdata[(rnum - 1) * cnum + cnum - 1], "encXyZdata[" + std::to_string((rnum - 1) * cnum + cnum - 1) + "].txt");
 	delete[] pzDatra;
 	timeutils.stop("encXyZdata encryption");
 
@@ -1172,7 +1229,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 	openFilePeakMEM.flush();
 
 	double **Binv = MyTools::zInvBFromFile(traindata, factorDim,
-			trainSampleDim);
+	                                       trainSampleDim);
 	for (long r = 0; r < rnum - 1; ++r) {
 		double **zInvB = new double*[minbatchsize];
 		for (long i = 0; i < minbatchsize; ++i) {
@@ -1215,12 +1272,12 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 			for (long j = 0; j < minbatchsize; ++j) {
 				for (long l = 0; l < batch; ++l) {
 					pzData[batch * j + l].real(
-							Binv[r * minbatchsize + j][batch * i + l]);
+					    Binv[r * minbatchsize + j][batch * i + l]);
 					pzData[batch * j + l].imag(0);
 				}
 			}
 			scheme.encrypt(encBinv[r * cnum + i], pzData, slots, wBits, logQ);
-			SerializationUtils::writeCiphertext(encBinv[r * cnum + i], "encBinv[]"+ std::to_string(r * cnum + i) +"].txt");
+			SerializationUtils::writeCiphertext(encBinv[r * cnum + i], "encBinv[" + std::to_string(r * cnum + i) + "].txt");
 		}
 		// i == cnum - 1       - the last cnum in each row
 		complex<double> *pzData3 = new complex<double> [slots]();
@@ -1229,7 +1286,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 
 			for (long l = 0; l < rest; ++l) {
 				pzData3[batch * j + l].real(
-						Binv[r * minbatchsize + j][batch * (cnum - 1) + l]);
+				    Binv[r * minbatchsize + j][batch * (cnum - 1) + l]);
 				pzData3[batch * j + l].imag(0);
 			}
 			for (long l = rest; l < batch; ++l) {
@@ -1238,8 +1295,8 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 			}
 		}
 		scheme.encrypt(encBinv[r * cnum + cnum - 1], pzData3, slots, wBits,
-				logQ);
-		SerializationUtils::writeCiphertext(encBinv[r * cnum + cnum - 1], "encBinv[]"+ std::to_string(r * cnum + cnum - 1) +"].txt");
+		               logQ);
+		SerializationUtils::writeCiphertext(encBinv[r * cnum + cnum - 1], "encBinv[" + std::to_string(r * cnum + cnum - 1) + "].txt");
 
 	}
 	// The last min-batch may consists of several ( trainSampleDim - minbatchsize * (rnum-1) ) rows of zeors.
@@ -1252,7 +1309,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 		for (long j = 0; j < restrownum; ++j) {
 			for (long l = 0; l < batch; ++l) {
 				pzData[batch * j + l].real(
-						Binv[(rnum - 1) * minbatchsize + j][batch * i + l]);
+				    Binv[(rnum - 1) * minbatchsize + j][batch * i + l]);
 				pzData[batch * j + l].imag(0);
 			}
 		}
@@ -1263,8 +1320,8 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 			}
 		}
 		scheme.encrypt(encBinv[(rnum - 1) * cnum + i], pzData, slots, wBits,
-				logQ);
-		SerializationUtils::writeCiphertext(encBinv[(rnum - 1) * cnum + i], "encBinv[]"+ std::to_string((rnum - 1) * cnum + i) +"].txt");
+		               logQ);
+		SerializationUtils::writeCiphertext(encBinv[(rnum - 1) * cnum + i], "encBinv[" + std::to_string((rnum - 1) * cnum + i) + "].txt");
 	}
 	// i == cnum - 1       - the last cnum in each row
 	complex<double> *pzData7 = new complex<double> [slots]();
@@ -1272,7 +1329,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 		long rest = factorDim - batch * (cnum - 1);
 		for (long l = 0; l < rest; ++l) {
 			pzData7[batch * j + l].real(
-					Binv[(rnum - 1) * minbatchsize + j][batch * (cnum - 1) + l]);
+			    Binv[(rnum - 1) * minbatchsize + j][batch * (cnum - 1) + l]);
 			pzData7[batch * j + l].imag(0);
 		}
 		for (long l = rest; l < batch; ++l) {
@@ -1288,8 +1345,8 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 		}
 	}
 	scheme.encrypt(encBinv[(rnum - 1) * cnum + cnum - 1], pzData7, slots, wBits,
-			logQ);
-	SerializationUtils::writeCiphertext(encBinv[(rnum - 1) * cnum + cnum - 1], "encBinv[]"+ std::to_string((rnum - 1) * cnum + cnum - 1) +"].txt");
+	               logQ);
+	SerializationUtils::writeCiphertext(encBinv[(rnum - 1) * cnum + cnum - 1], "encBinv[" + std::to_string((rnum - 1) * cnum + cnum - 1) + "].txt");
 	delete[] pzData7;
 	timeutils.stop("Binv encryption");
 
@@ -1302,7 +1359,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 	openFilePeakMEM << "," << (MyTools::getPeakRSS() >> 20);
 	openFilePeakMEM.flush();
 
-	// zDataTrain and zDataTest are used for testing in the plaintext environment 
+	// zDataTrain and zDataTest are used for testing in the plaintext environment
 	// zData = (Y,Y@X)
 	double **zDataTrain = new double*[trainSampleDim];
 	for (int i = 0; i < trainSampleDim; ++i) {
@@ -1352,19 +1409,39 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 	//                        Client sent (encTrainData, encTrainLabel, enc(x0), encWData, and encVData) to Server                        //
 	//                                                                                                                                    //
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////// From now on, the server starts its work on what client sent to it. //////////////////////////////////	
+	////////////////////////////////// From now on, the server starts its work on what client sent to it. //////////////////////////////////
+	cout << endl << endl << endl << endl << "scheme.leftRotKeyMap.size() = " << scheme.leftRotKeyMap.size() << endl << endl << endl << endl;
+	cout << endl << endl << endl << endl;
+	double min_lr = 1.0;
+	double max_lr = 2.0;
+	double total_steps = Epoch_Number * rnum;
+	double exp_gamma = 2.5;
+	cout << "min_lr = " << min_lr << endl;
+	cout << "max_lr = " << max_lr << endl;
+	cout << "total_steps = " << total_steps << endl;
+	cout << "exp_gamma = " << exp_gamma << endl;
+	cout << "len(Xminbatches) = rnum = " << rnum << endl;
+	cout << endl << endl << endl << endl;
+
+	double totalUpdatingWeightsTime = 0.0;
+	double totalUpdatingWeights = 0.0;
+	double totalRefreshingWeightsTime = 0.0;
+	double totalBootstrappingOperations = 0.0;
+
+
+
+
 	double alpha0, alpha1, eta, gamma;
 	double enccor, encauc, truecor, trueauc;
 
 	alpha0 = 0.01;
 	alpha1 = (1. + sqrt(1. + 4.0 * alpha0 * alpha0)) / 2.0;
-	//CyclicLR
-	double base_lr = 1.00;
-	double max_lr = 2.00;
-	long step_size = 64;
-	// string mode = 'exp_range'
-	double clr_gamma = 0.9;
-	for (long iter = 0; iter < numIter; ++iter) {
+
+	unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+	cout << endl << "unsigned seed = chrono::system_clock::now().time_since_epoch().count();";
+	cout << endl << "unsigned seed = " << (unsigned)seed << endl;
+	
+	for (long iter = 0; iter < Epoch_Number; ++iter) {
 
 		vector<int> randr;
 		for (int ir = 0; ir < rnum; ++ir)
@@ -1373,7 +1450,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 		for (int &x : randr)
 			cout << ' ' << x;
 		cout << '\n';
-		unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+		
 		shuffle(randr.begin(), randr.end(), default_random_engine(seed));
 		cout << "randr[]: ";
 		for (int &x : randr)
@@ -1382,21 +1459,18 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 
 		//cout << endl << "NesterovWithG : "+ to_string(iter+1)+" -th iteration" << endl;
 		for (long r = 0; r < rnum; ++r) {
-			timeutils.start(
-					"NesterovWithGminBatch : " + to_string(iter + 1)
-							+ " -th iteration");
+			timeutils.start("NesterovWithGminBatch : " + to_string(iter + 1) + " -th iteration");
+			auto start_timeUpdatingWeights = std::chrono::high_resolution_clock::now();
 
 			cout << endl << endl << endl << endl << "encVData[0].logq = "
-					<< encVData[0].logq << endl << endl << endl << endl;
+			     << encVData[0].logq << endl << endl << endl << endl;
 
+			     
 			eta = (1 - alpha0) / alpha1;
 
 			auto iterations = iter * rnum + r;
-			auto cycle = floor(1 + iterations / (2 * step_size));
-			auto x = abs(iterations / step_size - 2 * cycle + 1);
-			//base_lr + (max_lr - base_lr) * max(0, (1 - x)) *clrgamma**(iterations)
-			auto gamma = base_lr
-					+ (max_lr - base_lr) * pow(E, -clr_gamma * iterations / (numIter*rnum) );
+			// self.max_lr - (self.max_lr - self.min_lr) * (self.current_step / self.total_steps)**self.gamma
+			auto gamma = max_lr - (max_lr - min_lr) * pow(iterations / total_steps, exp_gamma );
 
 
 
@@ -1405,7 +1479,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 			//timeutils.start("encZData[i] = encTrainLabel[i] @ encTrainData[i] for i in range(cnum)");
 			// To Get the encZData
 			NTL_EXEC_RANGE(cnum, first, last);
-			for(long i = first; i < last; ++i) {
+			for (long i = first; i < last; ++i) {
 				//encZData[i].copy(encXyZdata[randr[r] * cnum + i]);
 				encZData[i].copy(encXyZdata[r * cnum + i]);
 			}
@@ -1465,7 +1539,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 			for (long i = 0; i < cnum; ++i)
 				encIPvec[i].kill();
 			delete[] encIPvec;
-			//CipherGD::encInnerProduct(encIP, encZData, encVData, rpoly, cnum, bBits, wBits, pBits); 
+			//CipherGD::encInnerProduct(encIP, encZData, encVData, rpoly, cnum, bBits, wBits, pBits);
 
 			Ciphertext *encGrad = new Ciphertext[cnum];
 
@@ -1482,35 +1556,35 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 			cout << setiosflags(ios::showpos) << degree3[0] << " ";
 			cout << setiosflags(ios::showpos) << degree3[1] << "x ";
 			cout << setiosflags(ios::showpos) << degree3[2] << "x^3 " << endl
-					<< endl;
+			     << endl;
 			cout << std::noshowpos;
 			cout << "gamma = " << gamma << endl << endl << endl;
 
 			scheme.addConstAndEqual(encIP2, degree3[1] / degree3[2],
-					encIP2.logp);                // encIP2 = a/b + yWTx*yWTx
+			                        encIP2.logp);                // encIP2 = a/b + yWTx*yWTx
 
 			NTL_EXEC_RANGE(cnum, first, last);
 			//long first = 0, last = cnum;
 			for (long i = first; i < last; ++i) {
 
-				scheme.multByConst(encGrad[i], encZData[i], (gamma) * degree3[2], wBits+pBits);
+				scheme.multByConst(encGrad[i], encZData[i], (gamma) * degree3[2], wBits + pBits);
 
 				scheme.reScaleByAndEqual(encGrad[i], pBits); // encGrad = Y@X *gamma * b
 
 				Ciphertext ctIP(encIP);
 				if (encGrad[i].logq > ctIP.logq)
-				scheme.modDownToAndEqual(encGrad[i], ctIP.logq); /* whose logq should be ... */
+					scheme.modDownToAndEqual(encGrad[i], ctIP.logq); /* whose logq should be ... */
 				if (encGrad[i].logq < ctIP.logq)
-				scheme.modDownToAndEqual(ctIP, encGrad[i].logq);
+					scheme.modDownToAndEqual(ctIP, encGrad[i].logq);
 
 				scheme.multAndEqual(encGrad[i], ctIP); // encGrad = gamma * Y@X * b * yWTx
 				scheme.reScaleByAndEqual(encGrad[i], ctIP.logp);
 
 				Ciphertext ctIP2(encIP2);
-				if(encGrad[i].logq > ctIP2.logq)
-				scheme.modDownToAndEqual(encGrad[i], ctIP2.logq);
-				if(encGrad[i].logq < ctIP2.logq)
-				scheme.modDownToAndEqual(ctIP2, encGrad[i].logq);
+				if (encGrad[i].logq > ctIP2.logq)
+					scheme.modDownToAndEqual(encGrad[i], ctIP2.logq);
+				if (encGrad[i].logq < ctIP2.logq)
+					scheme.modDownToAndEqual(ctIP2, encGrad[i].logq);
 				scheme.multAndEqual(encGrad[i], ctIP2);// encGrad = gamma * Y@X * (a * yWTx + b * yWTx ^3)
 				scheme.reScaleByAndEqual(encGrad[i], ctIP2.logp);
 
@@ -1541,11 +1615,11 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 					scheme.addAndEqual(encGrad[i], tmp);
 				}
 
-				Ciphertext ctBinv(encBinv[r*cnum+i]); ////~~~~~~//~~~~~~//~~~~~~//~~~~~~//~~~~~~//~~~~~~//~~~~~~
+				Ciphertext ctBinv(encBinv[r * cnum + i]); ////~~~~~~//~~~~~~//~~~~~~//~~~~~~//~~~~~~//~~~~~~//~~~~~~
 				if (encGrad[i].logq > ctBinv.logq)
-				scheme.modDownToAndEqual(encGrad[i], ctBinv.logq);
+					scheme.modDownToAndEqual(encGrad[i], ctBinv.logq);
 				if (encGrad[i].logq < ctBinv.logq)
-				scheme.modDownToAndEqual(ctBinv, encGrad[i].logq);
+					scheme.modDownToAndEqual(ctBinv, encGrad[i].logq);
 
 				scheme.multAndEqual(encGrad[i], ctBinv);
 				scheme.reScaleByAndEqual(encGrad[i], ctBinv.logp);
@@ -1562,13 +1636,13 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 			NTL_EXEC_RANGE(cnum, first, last);
 			for (long i = first; i < last; ++i) {
 
-				if(encGrad[i].logp > encVData[i].logp) scheme.reScaleByAndEqual(encGrad[i], encGrad[i].logp-encVData[i].logp);
-				if(encGrad[i].logp < encVData[i].logp) scheme.reScaleByAndEqual(encVData[i], encVData[i].logp-encGrad[i].logp);
+				if (encGrad[i].logp > encVData[i].logp) scheme.reScaleByAndEqual(encGrad[i], encGrad[i].logp - encVData[i].logp);
+				if (encGrad[i].logp < encVData[i].logp) scheme.reScaleByAndEqual(encVData[i], encVData[i].logp - encGrad[i].logp);
 				scheme.modDownToAndEqual(encVData[i], encGrad[i].logq);
 
 				Ciphertext ctmpw;
 				scheme.add(ctmpw, encVData[i], encGrad[i]); // encGrad[i] has already self-multiplied with gamma
-															// ctmpw = encVData[i] - encGrad[i]
+				// ctmpw = encVData[i] - encGrad[i]
 
 				scheme.multByConst(encVData[i], ctmpw, 1. - eta, pBits);// encVData[i] = ( 1. - eta ) * ctmpw
 				//scheme.reScaleByAndEqual(encVData[i], pBits-5);
@@ -1578,7 +1652,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 
 				if (encWData[i].logq > encVData[i].logq) scheme.modDownToAndEqual(encWData[i], encVData[i].logq);
 				if (encWData[i].logq < encVData[i].logq) scheme.modDownToAndEqual(encVData[i], encWData[i].logq);
-				if (encWData[i].logp != encVData[i].logp) {cout << "logp != logp";exit(0);}
+				if (encWData[i].logp != encVData[i].logp) {cout << "logp != logp"; exit(0);}
 
 				scheme.addAndEqual(encVData[i], encWData[i]); // encVData[i] = encVData[i] + encWData[i]
 				// encVData[i] = ( 1. - eta ) * ctmpw + eta * encWData[i]
@@ -1589,24 +1663,29 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 				ctmpw.kill();
 			}
 			NTL_EXEC_RANGE_END
+
 			;
 			/* CipherGD::encNLGDstep(encWData, encVData, encGrad, eta, cnum, pBits); */
+
+auto end_timeUpdatingWeights = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end_timeUpdatingWeights - start_timeUpdatingWeights;
+        totalUpdatingWeightsTime += duration.count();  // Returns the elapsed time in seconds
+        totalUpdatingWeights += 1;
+
 
 			for (long i = 0; i < cnum; ++i)
 				encGrad[i].kill();
 			delete[] encGrad;
 			/* cipherGD.encNLGDiteration(kdeg, encZData, encWData, encVData, rpoly, cnum, gamma, eta, sBits, bBits, wBits, pBits, aBits); */
 
-			timeutils.stop(
-					"NesterovWithG : " + to_string(iter + 1)
-							+ " -th iteration");
+			timeutils.stop("NesterovWithG : " + to_string(iter + 1)  + " -th iteration");
 
 			openFileTIME << "," << timeutils.timeElapsed;
 			openFileTIME.flush();
 			openFileTIMELabel << ","
-					<< "NesterovWithGminBatch : " + to_string(iter + 1)
-							+ " -th epoch." + to_string(r + 1)
-							+ "-th iteration";
+			                  << "NesterovWithGminBatch : " + to_string(iter + 1)
+			                  + " -th epoch." + to_string(r + 1)
+			                  + "-th iteration";
 			openFileTIMELabel.flush();
 			openFileCurrMEM << "," << (MyTools::getCurrentRSS() >> 20);
 			openFileCurrMEM.flush();
@@ -1619,7 +1698,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			cout << endl << "---------- TEST : THE " << iter * rnum + r + 1
-					<< "-th ITERATION : Weights, AUC, MLE ----------" << endl;
+			     << "-th ITERATION : Weights, AUC, MLE ----------" << endl;
 			/* cipherGD.decWData(cwData, encWData, factorDim, batch, cnum, wBits);     */
 			for (long i = 0; i < (cnum - 1); ++i) {
 				complex<double> *dcvv = scheme.decrypt(secretKey, encVData[i]);
@@ -1629,7 +1708,7 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 				delete[] dcvv;
 			}
 			complex<double> *dcvv = scheme.decrypt(secretKey,
-					encVData[cnum - 1]);
+			                                       encVData[cnum - 1]);
 			long rest = factorDim - batch * (cnum - 1);
 			for (long j = 0; j < rest; ++j) {
 				cvData[batch * (cnum - 1) + j] = dcvv[j].real();
@@ -1639,78 +1718,99 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 			cout << "Current cWdata (encVData) : " << endl;
 			for (long i = 0; i < factorDim; ++i)
 				cout << setiosflags(ios::fixed) << setprecision(12) << cvData[i]
-						<< ",\t";
+				     << ",\t";
 			cout << endl;
 
 			openFileTestAUC << ","
-					<< MyTools::calculateAUC(zDataTest, cvData, factorDim,
-							testSampleDim, enccor, encauc);
+			                << MyTools::calculateAUC(zDataTest, cvData, factorDim,
+			                        testSampleDim, enccor, encauc);
 			openFileTestAUC.flush();
 			openFileTrainAUC << ","
-					<< MyTools::calculateAUC(zDataTrain, cvData, factorDim,
-							trainSampleDim, enccor, encauc);
+			                 << MyTools::calculateAUC(zDataTrain, cvData, factorDim,
+			                         trainSampleDim, enccor, encauc);
 			openFileTrainAUC.flush();
 
 			openFileTestACC << ","
-					<< MyTools::calculateACC(zDataTest, cvData, factorDim,
-							testSampleDim, enccor, encauc);
+			                << MyTools::calculateACC(zDataTest, cvData, factorDim,
+			                        testSampleDim, enccor, encauc);
 			openFileTestACC.flush();
 			openFileTrainACC << ","
-					<< MyTools::calculateACC(zDataTrain, cvData, factorDim,
-							trainSampleDim, enccor, encauc);
+			                 << MyTools::calculateACC(zDataTrain, cvData, factorDim,
+			                         trainSampleDim, enccor, encauc);
 			openFileTrainACC.flush();
 
 			openFileTestMLE << ","
-					<< MyTools::calculateMLE(zDataTest, cvData, factorDim,
-							testSampleDim, enccor, encauc);
+			                << MyTools::calculateMLE(zDataTest, cvData, factorDim,
+			                        testSampleDim, enccor, encauc);
 			openFileTestMLE.flush();
 			openFileTrainMLE << ","
-					<< MyTools::calculateMLE(zDataTrain, cvData, factorDim,
-							trainSampleDim, enccor, encauc);
+			                 << MyTools::calculateMLE(zDataTrain, cvData, factorDim,
+			                         trainSampleDim, enccor, encauc);
 			openFileTrainMLE.flush();
 
+			cout << endl << endl << endl << endl << endl;
+
+			cout << "TrainMLE : "
+			     << MyTools::calculateMLE(zDataTrain, cvData, factorDim,
+			                         trainSampleDim, enccor, encauc) << endl;
+			cout << "TrainAUC : "
+			     << MyTools::calculateAUC(zDataTrain, cvData, factorDim,
+			                         trainSampleDim, enccor, encauc) << endl;
+			cout << "TrainACC : "
+			     << MyTools::calculateACC(zDataTrain, cvData, factorDim,
+			                         trainSampleDim, enccor, encauc) << endl;
+			cout << endl;
 			cout << "Test MLE : "
-					<< MyTools::calculateMLE(zDataTest, cvData, factorDim,
-							testSampleDim, enccor, encauc) << endl;
+			     << MyTools::calculateMLE(zDataTest, cvData, factorDim,
+			                              testSampleDim, enccor, encauc) << endl;
 			cout << "Test AUC : "
-					<< MyTools::calculateAUC(zDataTest, cvData, factorDim,
-							testSampleDim, enccor, encauc) << endl;
+			     << MyTools::calculateAUC(zDataTest, cvData, factorDim,
+			                              testSampleDim, enccor, encauc) << endl;
 			cout << "Test ACC : "
-					<< MyTools::calculateACC(zDataTest, cvData, factorDim,
-							testSampleDim, enccor, encauc) << endl;
+			     << MyTools::calculateACC(zDataTest, cvData, factorDim,
+			                              testSampleDim, enccor, encauc) << endl;
 			cout << " ----------------- end of the " << (iter + 1)
-					<< "-th epoch ----------------- " << endl;
+			     << "-th epoch ----------------- " << endl;
 			cout << " ----------------- end of the " << (r + 1)
-					<< "-th iteration ----------------- " << endl << endl;
+			     << "-th iteration ----------------- " << endl << endl;
 			cout
-					<< "--------------------------------------------------------------------------------"
-					<< endl;
+			        << "--------------------------------------------------------------------------------"
+			        << endl;
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 			cout << endl << endl << endl << endl << "encVData[0].logq = "
-					<< encVData[0].logq << endl << endl << endl << endl;
+			     << encVData[0].logq << endl << endl << endl << endl;
 
 			if (encVData[0].logq < 220 + encVData[0].logp) {
-				//if ( encVData[0].logq <= 450 && iter < numIter-1 || encVData[0].logq < wBits && iter == numIter-1) {
+				//if ( encVData[0].logq <= 450 && iter < Epoch_Number-1 || encVData[0].logq < wBits && iter == Epoch_Number-1) {
 
 				timeutils.start("Use Bootstrap To Recrypt Ciphertext");
+				auto start_timeRefreshingWeights = std::chrono::high_resolution_clock::now();
 
+			cout << endl << "before Bootstrap: encWData[0].logq = " << encWData[0].logq << endl;
 				NTL_EXEC_RANGE(cnum, first, last);
-				for(long i = first; i < last; ++i) {
+				for (long i = first; i < last; ++i) {
 					scheme.modDownToAndEqual(encWData[i], bootlogq);
 					encWData[i].n = batch;
-					scheme.bootstrapAndEqual(encWData[i], bootlogq, logQ, logT, logI);
+					scheme.bootstrapAndEqual(encWData[i], bootlogq, 990, logT, logI);
 					encWData[i].n = slots;
 				}
 				NTL_EXEC_RANGE_END
 				NTL_EXEC_RANGE(cnum, first, last);
-				for(long i = first; i < last; ++i) {
+				for (long i = first; i < last; ++i) {
 					scheme.modDownToAndEqual(encVData[i], bootlogq);
 					encVData[i].n = batch;
-					scheme.bootstrapAndEqual(encVData[i], bootlogq, logQ, logT, logI);
+					scheme.bootstrapAndEqual(encVData[i], bootlogq, 990, logT, logI);
 					encVData[i].n = slots;
 				}
 				NTL_EXEC_RANGE_END
+			cout << endl << "after  Bootstrap: encWData[0].logq = " << encWData[0].logq << endl;
+				auto end_timeRefreshingWeights = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duretion = end_timeRefreshingWeights - start_timeRefreshingWeights;
+        totalRefreshingWeightsTime += duretion.count();  // Returns the elapsed time in seconds
+        totalBootstrappingOperations += 1;
+
+
 
 				timeutils.stop("Use Bootstrap To Recrypt Ciphertext");
 
@@ -1729,13 +1829,19 @@ double* MyMethods::testCryptoMiniBatchNAGwithG(double **traindata,
 			//             Over and Out                                                //
 			/////////////////////////////////////////////////////////////////////////////
 			cout
-					<< "--------------------------------------------------------------------------------"
-					<< endl << endl;
+			        << "--------------------------------------------------------------------------------"
+			        << endl << endl;
 
 			alpha0 = alpha1;
 			alpha1 = (1. + sqrt(1. + 4.0 * alpha0 * alpha0)) / 2.0;
 			cout << endl << " !!! STOP " << iter + 1 << " ITERATION !!! "
-					<< endl << endl;
+			     << endl << endl;
+			     			     	cout << endl << endl << endl << endl;
+			     	cout << "totalUpdatingWeightsTime = " << totalUpdatingWeightsTime << endl;
+			     	cout << "totalUpdatingWeights = " << totalUpdatingWeights << endl;
+				cout << "totalRefreshingWeightsTime = " << totalRefreshingWeightsTime << endl;
+				cout << "totalBootstrappingOperations = " << totalBootstrappingOperations << endl;
+				cout << endl << endl << endl << endl;
 		}
 	}
 

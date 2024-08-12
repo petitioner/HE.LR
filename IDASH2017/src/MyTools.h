@@ -42,10 +42,14 @@
 const long double PI= 3.14159265358979323846264338327950288419716939937510L;
 const long double E = 2.71828182845904523536028747135266249775724709369995L;
 
-//static double degree3[4] = {0.5,-0.15012,0.0,0.001593}; //> ~ 1 / (1 + exp(x)) (LSFitting with bnd [-8,8])
-//static double degree3[3] = {0.5,  -0.0843,          0.0002}; //> ~ 1/ (1 + exp(x)) (LSFitting with bnd [-16,16])
-static double degree3[3] = {0.5,  -0.106795345032,  0.106795345032}; //> ~ 1/ (1 + exp(x)) from CNN training
-//static double degree3[3] = {0.5,  -0.057485,      0.000076416}; //> ~ 1/ (1 + exp(x)) polyfit [-24:0.01:+24]
+
+
+// MNIST : [-16, +16]
+// Credit :[-8,   +8]
+//static double degree3[3] = {0.5,  -0.15012, 0.001593};     // Credit :[-8,   +8]
+static double degree3[3] = {0.5,  -0.0843,          0.0002}; // MNIST : [-16, +16]
+
+
 
 
 

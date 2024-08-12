@@ -1,4 +1,5 @@
 #include <NTL/BasicThreadPool.h>
+#include <thread>
 #include <cstdlib>
 #include <iostream>
 #include <stdexcept>
@@ -14,14 +15,31 @@ using namespace NTL;
 
 int main(int argc, char **argv) {
 
-	SetNumThreads(8);
+	// Get the number of hardware threads available on the current system
+	unsigned int numThreads = thread::hardware_concurrency();
+	if (numThreads == 0) {
+		cerr << "Unable to get the number of hardware threads." << endl;
+		return EXIT_FAILURE;
+	}
 
-	long numIter = 35;
+	// Print the number of hardware threads
+	cout << "Number of hardware threads available: " << numThreads << endl;
 
-	string trainfile = "../data/Credit_train.csv";
-	string testfile = "../data/Credit_test.csv";
-	//string trainfile = "../data/MNIST_train.txt";
-	//string testfile = "../data/MNIST_test.txt";
+	// Set the number of threads in NTL to the number of hardware threads
+	SetNumThreads(numThreads);
+
+	
+
+	long Epoch_Number = 3;
+
+
+	// Do not foget to change ''static double degree3[3] = ...;'' in MyTools.h
+    // Do not foget to change ''static double degree3[3] = ...;'' in MyTools.h
+
+	//string trainfile = "../data/Credit_train.csv";
+	//string testfile  = "../data/Credit_test.csv";
+	string trainfile = "../data/MNIST_train.txt";
+	string testfile = "../data/MNIST_test.txt";
 
 	long trainSampleDim = 0, testSampleDim = 0, trainfactorDim = 0,	testfactorDim = 0;
 	double **traindataset, **testdataset;
@@ -42,13 +60,13 @@ int main(int argc, char **argv) {
 
 
 
-	string pathNesterovAGwithXTXasG =     "../result/20201123_FGCS";
+	string pathNesterovAGwithXTXasG =     "../result/202408";
 
-		   //pathNesterovAGwithXTXasG.append("_MNIST_");
-		   pathNesterovAGwithXTXasG.append("_Credit_");
+		   pathNesterovAGwithXTXasG.append("_MNIST_");
+		   //pathNesterovAGwithXTXasG.append("_Credit_");
 		   
-	//pathNesterovAGwithXTXasG.append("_MiniBatch_");
-	pathNesterovAGwithXTXasG.append("_FullBatch_");
+	pathNesterovAGwithXTXasG.append("_MiniBatch_");
+	//pathNesterovAGwithXTXasG.append("_FullBatch_");
 
 
 	// Step 1. clear the former result data stored in the four*3(AUC,MLE,TIME) different files.
@@ -89,11 +107,11 @@ int main(int argc, char **argv) {
 		cout << "testfile  : " << testfile << endl;
 
 
-		//MyMethods::testCryptoMiniBatchNAGwithG(traindata, trainlabel, trainfactorDim,
-		//	trainSampleDim, numIter, testdata, testlabel, testSampleDim,	pathNesterovAGwithXTXasG);
+		MyMethods::testCryptoMiniBatchNAGwithG(traindata, trainlabel, trainfactorDim,
+			trainSampleDim, Epoch_Number, testdata, testlabel, testSampleDim,	pathNesterovAGwithXTXasG);
 	
-		MyMethods::testCryptoFullBatchNAGwithG(traindata, trainlabel, trainfactorDim,
-			trainSampleDim, numIter, testdata, testlabel, testSampleDim,	pathNesterovAGwithXTXasG);
+		//MyMethods::testCryptoFullBatchNAGwithG(traindata, trainlabel, trainfactorDim,
+		//	trainSampleDim, Epoch_Number, testdata, testlabel, testSampleDim,	pathNesterovAGwithXTXasG);
 	
 
 	cout << endl << "END OF THE PROGRAMM" << endl;

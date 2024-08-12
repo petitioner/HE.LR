@@ -385,7 +385,7 @@ double MyTools::calculateAUC(double** zData, double* wData, long factorDim, long
             }
         }
         auc /= thetaTN.size() * thetaFP.size();
-        cout << "AUC: " << auc << endl;
+        //cout << "AUC: " << auc << endl;
     }
 
     return auc;
