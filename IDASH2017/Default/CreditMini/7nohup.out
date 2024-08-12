@@ -1,0 +1,2527 @@
+Number of hardware threads available: 8
+MyMethods::testCryptoMiniBatchNAGwithG(
+trainfile : ../data/Credit_train.csv
+testfile  : ../data/Credit_test.csv
+logQ = 275, logN = 16
+slots = 32768, batch = 32
+rnum = 27, cnum = 1
+min-batch size = 1024, minBatchDimBits = 10
+------------------
+Start Scheme generating
+Scheme generation time = 9776.4 ms
+------------------
+NOW THE PEAK RSS IS: 2699
+------------------
+Start Bootstrap Key generating
+Bootstrap Key generated time = 2336.2 ms
+------------------
+NOW THE CURR RSS IS: 3917
+NOW THE PEAK RSS IS: 3917
+------------------
+Start Polynomial generating...
+Polynomial generation time = 3.667 ms
+------------------
+------------------
+Start Encrypting encXyZdata...
+encXyZdata encryption time = 4409.73 ms
+------------------
+------------------
+Start Encrypting Binv...
+Binv encryption time = 4507.65 ms
+------------------
+------------------
+Start Encrypting wData and vData...
+wData and vData encryption time = 200.36 ms
+------------------
+
+
+
+
+scheme.leftRotKeyMap.size() = 34
+
+
+
+
+
+
+
+min_lr = 1
+max_lr = 2
+total_steps = 81
+exp_gamma = 2.5
+len(Xminbatches) = rnum = 27
+
+
+
+
+
+unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+unsigned seed = 4118665936
+randr[]:  0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26
+randr[]:  25 11 19 13 16 23 5 7 15 2 9 8 14 20 6 4 3 24 18 17 26 12 0 10 22 1 21
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 275
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.5 -0.15012x +0.001593x^3 
+
+gamma = 2
+
+
+NesterovWithG : 1 -th iteration time = 4770.4 ms
+------------------
+
+---------- TEST : THE 1-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-0.004163001400,	-0.004856691219,	-0.003989372055,	-0.004167564454,	-0.004375538527,	-0.004288548370,	-0.003061539063,	-0.003130747434,	-0.003270401562,	-0.003315291572,	-0.003489239620,	-0.003552390252,	-0.004280317109,	-0.004251575595,	-0.004268852088,	-0.004246790687,	-0.004184603453,	-0.004248427783,	-0.005647289598,	-0.006219649751,	-0.005021864046,	-0.005460951329,	-0.004765437118,	-0.005200519873,	
+
+
+
+
+
+TrainMLE : -18561.551942885184
+TrainAUC : 0.450580053635
+TrainACC : 77.897114921670
+
+Test MLE : -2063.262758842892
+Test AUC : 0.447269286849
+Test ACC : 77.751834556371
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 1-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 34784.902999999998 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 4.746179333000
+totalUpdatingWeights = 1.000000000000
+totalRefreshingWeightsTime = 34.784898275000
+totalBootstrappingOperations = 1.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.999983064912
+
+
+NesterovWithG : 1 -th iteration time = 5208.145000000000 ms
+------------------
+
+---------- TEST : THE 2-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-0.417867583601,	-0.482742683974,	-0.438658047419,	-0.429375224059,	-0.452453296473,	-0.422787749516,	-0.321655090357,	-0.317942504841,	-0.326871148384,	-0.350337363167,	-0.352907138869,	-0.360143404112,	-0.425769691159,	-0.408268535212,	-0.424132912246,	-0.428729560373,	-0.417671512935,	-0.431081936427,	-0.491301784589,	-0.561039456075,	-0.578558220342,	-0.551240997070,	-0.467125485102,	-0.582479201329,	
+
+
+
+
+
+TrainMLE : -16304.636720570286
+TrainAUC : 0.451568422926
+TrainACC : 77.897114921670
+
+Test MLE : -1757.335095854574
+Test AUC : 0.446678848478
+Test ACC : 77.751834556371
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 2-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 33060.928999999996 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 9.937079589000
+totalUpdatingWeights = 2.000000000000
+totalRefreshingWeightsTime = 67.845822545000
+totalBootstrappingOperations = 2.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.999904200677
+
+
+NesterovWithG : 1 -th iteration time = 5145.708000000000 ms
+------------------
+
+---------- TEST : THE 3-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-0.406313666214,	-0.542220928875,	-0.369717560350,	-0.384619044122,	-0.412654215643,	-0.379786154296,	-0.142774952640,	-0.143747299113,	-0.149017597968,	-0.182380924206,	-0.202045204526,	-0.209078630969,	-0.377180774362,	-0.347660137975,	-0.371644605739,	-0.375753958995,	-0.357624360766,	-0.379511873090,	-0.561061269308,	-0.596681984560,	-0.604551772359,	-0.585436727970,	-0.390441818122,	-0.717966074146,	
+
+
+
+
+
+TrainMLE : -15056.543733816299
+TrainAUC : 0.501794957981
+TrainACC : 77.897114921670
+
+Test MLE : -1651.187684137379
+Test AUC : 0.478437100626
+Test ACC : 77.751834556371
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 3-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 35734.436999999998 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 15.064343757000
+totalUpdatingWeights = 3.000000000000
+totalRefreshingWeightsTime = 103.580254320000
+totalBootstrappingOperations = 3.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.999736008107
+
+
+NesterovWithG : 1 -th iteration time = 5272.392000000000 ms
+------------------
+
+---------- TEST : THE 4-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-0.386976025126,	-0.626215070324,	-0.348797761225,	-0.352160758736,	-0.393131255765,	-0.380185722453,	0.072406043629,	0.061090111196,	0.054490164861,	-0.018846214536,	-0.026564007699,	-0.018336129271,	-0.334771536157,	-0.284277254579,	-0.325650601877,	-0.328605550906,	-0.292218335649,	-0.339969640476,	-0.614107174581,	-0.656795665847,	-0.690169567653,	-0.651722815833,	-0.393466434532,	-0.757722778642,	
+
+
+
+
+
+TrainMLE : -14164.179680131534
+TrainAUC : 0.595466459638
+TrainACC : 77.897114921670
+
+Test MLE : -1585.802327074069
+Test AUC : 0.549905227566
+Test ACC : 77.751834556371
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 4-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 31986.084999999999 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 20.317518727000
+totalUpdatingWeights = 4.000000000000
+totalRefreshingWeightsTime = 135.566335052000
+totalBootstrappingOperations = 4.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.999458077190
+
+
+NesterovWithG : 1 -th iteration time = 4579.759000000000 ms
+------------------
+
+---------- TEST : THE 5-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-0.482709978251,	-0.805156777909,	-0.438410857583,	-0.457488391211,	-0.490977072005,	-0.474706265318,	0.179767952187,	0.154757825277,	0.150617604717,	0.065792282821,	0.039905996221,	0.048893834290,	-0.431236991453,	-0.376402944674,	-0.422971289497,	-0.422772822691,	-0.372707307948,	-0.431328977531,	-0.901284215709,	-0.979140722963,	-1.001127414772,	-0.773076747494,	-0.699596459123,	-1.056615497182,	
+
+
+
+
+
+TrainMLE : -14496.056649400551
+TrainAUC : 0.621127239858
+TrainACC : 77.897114921670
+
+Test MLE : -1592.396742579219
+Test AUC : 0.575546846911
+Test ACC : 77.751834556371
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 5-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 33167.216999999997 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 24.881869927000
+totalUpdatingWeights = 5.000000000000
+totalRefreshingWeightsTime = 168.733547032000
+totalBootstrappingOperations = 5.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.999053299811
+
+
+NesterovWithG : 1 -th iteration time = 5372.421000000000 ms
+------------------
+
+---------- TEST : THE 6-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-0.539201485460,	-0.951149656621,	-0.500711567049,	-0.516945157051,	-0.558544969539,	-0.520788891742,	0.332987810511,	0.267131096175,	0.278123631721,	0.165620895591,	0.131070975038,	0.124071891148,	-0.475233553110,	-0.409441502615,	-0.467075195814,	-0.465886191920,	-0.404904843276,	-0.474780070536,	-1.195486830160,	-1.258620883964,	-1.260569801028,	-0.965759917474,	-0.882700772978,	-1.161207127173,	
+
+
+
+
+
+TrainMLE : -14568.469793623928
+TrainAUC : 0.642978817023
+TrainACC : 77.897114921670
+
+Test MLE : -1588.902040569507
+Test AUC : 0.599225483783
+Test ACC : 77.751834556371
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 6-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 38405.398999999998 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 30.237135772000
+totalUpdatingWeights = 6.000000000000
+totalRefreshingWeightsTime = 207.138941637000
+totalBootstrappingOperations = 6.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.998506636340
+
+
+NesterovWithG : 1 -th iteration time = 5633.128000000000 ms
+------------------
+
+---------- TEST : THE 7-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-0.521424579869,	-1.043386856852,	-0.448202758593,	-0.490037736670,	-0.537295910733,	-0.496923397281,	0.574435007814,	0.506025349004,	0.495323762550,	0.357247926619,	0.315574249767,	0.304637141082,	-0.451685929965,	-0.384822184124,	-0.440407180600,	-0.436052169217,	-0.362202253073,	-0.440728701700,	-1.360996606742,	-1.514096657720,	-1.300732687996,	-1.144216184896,	-1.083250903430,	-1.175845263334,	
+
+
+
+
+
+TrainMLE : -13621.267454709821
+TrainAUC : 0.676668192738
+TrainACC : 77.974889818896
+
+Test MLE : -1534.893908482613
+Test AUC : 0.630903338550
+Test ACC : 77.751834556371
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 7-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 36580.843999999997 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 35.850094748000
+totalUpdatingWeights = 7.000000000000
+totalRefreshingWeightsTime = 243.719780667000
+totalBootstrappingOperations = 7.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.997804504492
+
+
+NesterovWithG : 1 -th iteration time = 5210.105000000000 ms
+------------------
+
+---------- TEST : THE 8-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-0.653956408407,	-1.168196315812,	-0.545218089632,	-0.635127305007,	-0.710627573582,	-0.589720613849,	0.661658947622,	0.529672020521,	0.512620797215,	0.366653992353,	0.300638736321,	0.287159196878,	-0.570902069836,	-0.477602451175,	-0.556298342089,	-0.550062073542,	-0.454533181285,	-0.558002164080,	-1.656056847980,	-1.924427622132,	-1.597915439675,	-1.381340233889,	-1.322013489713,	-1.503970365166,	
+
+
+
+
+
+TrainMLE : -14656.854495158750
+TrainAUC : 0.671153495994
+TrainACC : 77.911929187808
+
+Test MLE : -1580.570124696673
+Test AUC : 0.627053911911
+Test ACC : 77.685123415610
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 8-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 35580.750000000000 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 41.044777203000
+totalUpdatingWeights = 8.000000000000
+totalRefreshingWeightsTime = 279.300525547000
+totalBootstrappingOperations = 8.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.996934421650
+
+
+NesterovWithG : 1 -th iteration time = 5615.593000000000 ms
+------------------
+
+---------- TEST : THE 9-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-0.666549206858,	-1.224455122048,	-0.477783786615,	-0.619468085086,	-0.735242845916,	-0.541155199025,	0.876477046410,	0.714071296448,	0.642940185897,	0.503580713185,	0.436217332017,	0.419962159685,	-0.558266248102,	-0.446267899455,	-0.535542741832,	-0.527241902337,	-0.412720100867,	-0.540505244762,	-1.867354641280,	-2.001469494451,	-1.699602429139,	-1.590525896303,	-1.433282434646,	-1.496873399848,	
+
+
+
+
+
+TrainMLE : -13881.795492956648
+TrainAUC : 0.687294502995
+TrainACC : 78.023036183845
+
+Test MLE : -1533.666646181817
+Test AUC : 0.641459836362
+Test ACC : 77.951967978652
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 9-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 37246.482000000004 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 46.642733111000
+totalUpdatingWeights = 9.000000000000
+totalRefreshingWeightsTime = 316.547002161000
+totalBootstrappingOperations = 9.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.995884773663
+
+
+NesterovWithG : 1 -th iteration time = 5546.204000000000 ms
+------------------
+
+---------- TEST : THE 10-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-0.666828593670,	-1.263503455699,	-0.400576341757,	-0.600919273962,	-0.745854857900,	-0.516756162387,	1.140316715164,	0.905948946006,	0.781195354610,	0.637228155126,	0.566676748519,	0.531345002836,	-0.538870588293,	-0.403700819371,	-0.504589910727,	-0.497003663757,	-0.356440296647,	-0.512223557932,	-2.135015700599,	-2.046034749019,	-1.816655022593,	-1.654992507874,	-1.492866008821,	-1.381656995959,	
+
+
+
+
+
+TrainMLE : -13244.840686805033
+TrainAUC : 0.697089432679
+TrainACC : 78.293396540869
+
+Test MLE : -1514.366069300133
+Test AUC : 0.650080365223
+Test ACC : 78.552368245497
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 10-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 36208.409000000000 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 52.170012623000
+totalUpdatingWeights = 10.000000000000
+totalRefreshingWeightsTime = 352.755405501000
+totalBootstrappingOperations = 10.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.994644655015
+
+
+NesterovWithG : 1 -th iteration time = 5302.913000000000 ms
+------------------
+
+---------- TEST : THE 11-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-0.767909589980,	-1.354139161713,	-0.407312639491,	-0.698585217852,	-0.864984656313,	-0.592125076601,	1.271707130558,	0.969203674804,	0.793484574803,	0.662926970690,	0.601530280915,	0.554380912133,	-0.607861376695,	-0.427208854092,	-0.561972455688,	-0.551150444766,	-0.354324312085,	-0.566007866606,	-2.392512263883,	-2.213464514662,	-2.031340385986,	-1.633750019443,	-1.533438321941,	-1.403276283516,	
+
+
+
+
+
+TrainMLE : -13583.701137059923
+TrainAUC : 0.697891830965
+TrainACC : 78.163771712159
+
+Test MLE : -1516.281585179218
+Test AUC : 0.651216219432
+Test ACC : 78.352234823215
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 11-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 36489.860000000001 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 57.452353946000
+totalUpdatingWeights = 11.000000000000
+totalRefreshingWeightsTime = 389.245259476000
+totalBootstrappingOperations = 11.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.993203752822
+
+
+NesterovWithG : 1 -th iteration time = 5748.880000000000 ms
+------------------
+
+---------- TEST : THE 12-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-0.857407343262,	-1.459812543308,	-0.424851614297,	-0.761984350080,	-0.951480654045,	-0.622255935551,	1.451125474342,	1.065499922680,	0.859331723146,	0.724092958036,	0.640710099631,	0.575850598282,	-0.673296226317,	-0.465480146368,	-0.617182815019,	-0.604754727522,	-0.382931174718,	-0.621018464067,	-2.683854704674,	-2.370402489116,	-2.256564488729,	-1.604459761166,	-1.687250074846,	-1.529514795321,	
+
+
+
+
+
+TrainMLE : -13886.425106579749
+TrainAUC : 0.699301925201
+TrainACC : 78.171178845228
+
+Test MLE : -1526.424748456661
+Test AUC : 0.652770783206
+Test ACC : 78.352234823215
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 12-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 37469.561000000002 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 63.174769828000
+totalUpdatingWeights = 12.000000000000
+totalRefreshingWeightsTime = 426.714814524000
+totalBootstrappingOperations = 12.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.991552259436
+
+
+NesterovWithG : 1 -th iteration time = 5308.107000000000 ms
+------------------
+
+---------- TEST : THE 13-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-0.817757879573,	-1.495371862882,	-0.316273116694,	-0.676518423470,	-0.903456450324,	-0.510502347520,	1.779610605368,	1.317643865532,	1.063224395845,	0.931996546244,	0.849279645129,	0.754784584276,	-0.607900268153,	-0.372753342965,	-0.542159898116,	-0.528388200529,	-0.283964198214,	-0.550318194038,	-2.874155198657,	-2.445906386415,	-2.326846411523,	-1.672951003039,	-1.801828645766,	-1.484440136516,	
+
+
+
+
+
+TrainMLE : -12920.780925754321
+TrainAUC : 0.703994809191
+TrainACC : 79.545202029554
+
+Test MLE : -1532.002720954124
+Test AUC : 0.656279324945
+Test ACC : 78.719146097398
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 13-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 37432.097999999998 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 68.465498482000
+totalUpdatingWeights = 13.000000000000
+totalRefreshingWeightsTime = 464.146907022000
+totalBootstrappingOperations = 13.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.989680804661
+
+
+NesterovWithG : 1 -th iteration time = 5745.104000000000 ms
+------------------
+
+---------- TEST : THE 14-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-0.874404612763,	-1.612729715547,	-0.291968291010,	-0.744189104574,	-0.969882636783,	-0.514091040506,	1.998197962018,	1.451722986291,	1.148612883578,	1.004732858476,	0.956893229731,	0.837690981712,	-0.663709045413,	-0.413999079668,	-0.588994341528,	-0.569020782160,	-0.296717448872,	-0.585527168028,	-3.117641468852,	-2.626179616442,	-2.304722134350,	-1.819492711314,	-1.795589059378,	-1.689293159479,	
+
+
+
+
+
+TrainMLE : -12924.586915107000
+TrainAUC : 0.704730750567
+TrainACC : 79.856301618459
+
+Test MLE : -1540.743879463517
+Test AUC : 0.656938583475
+Test ACC : 78.752501667779
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 14-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 36674.110000000001 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 74.190045449000
+totalUpdatingWeights = 14.000000000000
+totalRefreshingWeightsTime = 500.821009947000
+totalBootstrappingOperations = 14.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.987580401907
+
+
+NesterovWithG : 1 -th iteration time = 5282.799000000000 ms
+------------------
+
+---------- TEST : THE 15-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-1.027862298351,	-1.837725077720,	-0.363390379665,	-0.877362185440,	-1.120520635680,	-0.616517667242,	2.151155751449,	1.507552978912,	1.156727325560,	0.983842919663,	0.955200028425,	0.820205155770,	-0.815511044149,	-0.549920780626,	-0.725429712156,	-0.699838279671,	-0.406137108581,	-0.715177538927,	-3.471638848522,	-2.920449243578,	-2.410778979074,	-2.078859216524,	-1.992735024418,	-1.936891386249,	
+
+
+
+
+
+TrainMLE : -13692.975262383281
+TrainAUC : 0.704664620285
+TrainACC : 78.678567460464
+
+Test MLE : -1531.433586755975
+Test AUC : 0.657451197181
+Test ACC : 78.985990660440
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 15-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 37281.803000000000 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 79.457476080000
+totalUpdatingWeights = 15.000000000000
+totalRefreshingWeightsTime = 538.102806711000
+totalBootstrappingOperations = 15.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.985242404564
+
+
+NesterovWithG : 1 -th iteration time = 5752.861000000000 ms
+------------------
+
+---------- TEST : THE 16-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-1.087779465032,	-1.942357449092,	-0.358594449163,	-0.900382946701,	-1.156756904320,	-0.636284521981,	2.371463489249,	1.651649460730,	1.238073620990,	1.031794413789,	1.021200461323,	0.885415685783,	-0.865734166091,	-0.602585213563,	-0.772789347122,	-0.740935005768,	-0.425046328492,	-0.742893134453,	-3.711548639256,	-3.190591211689,	-2.468761379197,	-2.134751598046,	-1.746619157924,	-2.142148509953,	
+
+
+
+
+
+TrainMLE : -13734.748017193089
+TrainAUC : 0.705416168120
+TrainACC : 78.889670752935
+
+Test MLE : -1539.207491641104
+Test AUC : 0.658033917404
+Test ACC : 78.952635090060
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 16-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 36941.129000000001 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 85.190609508000
+totalUpdatingWeights = 16.000000000000
+totalRefreshingWeightsTime = 575.043930446000
+totalBootstrappingOperations = 16.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.982658470084
+
+
+NesterovWithG : 1 -th iteration time = 5566.118000000000 ms
+------------------
+
+---------- TEST : THE 17-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-1.080660265253,	-1.977579668908,	-0.303641534256,	-0.888411565736,	-1.157255734447,	-0.568327056849,	2.622910508953,	1.823552678910,	1.355943853210,	1.111522094835,	1.102457562490,	0.977642376027,	-0.855757358367,	-0.580135494504,	-0.753415477876,	-0.713053409934,	-0.387486561802,	-0.719554337544,	-3.893677162209,	-3.314579200972,	-2.479173394017,	-2.259673216288,	-1.708898225867,	-2.249017774015,	
+
+
+
+
+
+TrainMLE : -13268.003415834428
+TrainAUC : 0.706624047568
+TrainACC : 79.860005184993
+
+Test MLE : -1550.710129201165
+Test AUC : 0.659172987509
+Test ACC : 78.685790527018
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 17-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 37025.775999999998 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 90.738788127000
+totalUpdatingWeights = 17.000000000000
+totalRefreshingWeightsTime = 612.069700702000
+totalBootstrappingOperations = 17.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.979820529970
+
+
+NesterovWithG : 1 -th iteration time = 5532.915000000000 ms
+------------------
+
+---------- TEST : THE 18-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-1.115143802869,	-2.034554370731,	-0.299051149680,	-0.885977771320,	-1.203806519193,	-0.526141166538,	2.868307546261,	1.995716723353,	1.459032457068,	1.173891075196,	1.176437899867,	1.052701191119,	-0.853099552024,	-0.542901363569,	-0.741791571776,	-0.705591007943,	-0.348437349239,	-0.717857446247,	-4.047489555996,	-3.467797730706,	-2.570280255499,	-2.462876452461,	-1.736822000080,	-2.236600874140,	
+
+
+
+
+
+TrainMLE : -13149.053689365233
+TrainAUC : 0.707349664303
+TrainACC : 80.389615199437
+
+Test MLE : -1572.485472439990
+Test AUC : 0.660133897015
+Test ACC : 78.785857238159
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 18-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 37635.120999999999 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 96.255725648000
+totalUpdatingWeights = 18.000000000000
+totalRefreshingWeightsTime = 649.704816176000
+totalBootstrappingOperations = 18.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.976720764405
+
+
+NesterovWithG : 1 -th iteration time = 5591.704000000000 ms
+------------------
+
+---------- TEST : THE 19-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-1.272639395657,	-2.164407851929,	-0.427111067367,	-1.007870348660,	-1.365163070253,	-0.630611220933,	2.952031675722,	1.975009993884,	1.390267317759,	1.079000755946,	1.087300295741,	0.971066263060,	-0.972665085207,	-0.622019742339,	-0.852065691106,	-0.819508245466,	-0.424344384708,	-0.837743532040,	-4.265693594320,	-3.668231070321,	-2.745820560281,	-2.495246950534,	-1.880685283710,	-2.456561066772,	
+
+
+
+
+
+TrainMLE : -14304.493783153061
+TrainAUC : 0.707611245778
+TrainACC : 78.978556349765
+
+Test MLE : -1570.527903094791
+Test AUC : 0.661048497630
+Test ACC : 79.019346230821
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 19-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 37380.163000000000 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 101.827558523000
+totalUpdatingWeights = 19.000000000000
+totalRefreshingWeightsTime = 687.084973262000
+totalBootstrappingOperations = 19.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.973351580575
+
+
+NesterovWithG : 1 -th iteration time = 5725.965000000000 ms
+------------------
+
+---------- TEST : THE 20-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-1.167690196776,	-2.020208762156,	-0.269271434953,	-0.859767428761,	-1.223640386522,	-0.451708893848,	3.275415281179,	2.199966439605,	1.551958851053,	1.208327199206,	1.217036386060,	1.100584998035,	-0.818526087508,	-0.436811023736,	-0.688514109865,	-0.656856324449,	-0.239080335222,	-0.683553999761,	-4.191116038214,	-3.682207614611,	-2.658012087941,	-2.330902738203,	-1.773693069115,	-2.453600589563,	
+
+
+
+
+
+TrainMLE : -13012.658942955559
+TrainAUC : 0.708903522793
+TrainACC : 80.811821784378
+
+Test MLE : -1613.584925915877
+Test AUC : 0.662186281377
+Test ACC : 78.185456971314
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 20-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 36404.779999999999 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 107.537204821000
+totalUpdatingWeights = 20.000000000000
+totalRefreshingWeightsTime = 723.489746238000
+totalBootstrappingOperations = 20.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.969705593964
+
+
+NesterovWithG : 1 -th iteration time = 5626.422000000000 ms
+------------------
+
+---------- TEST : THE 21-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-1.322546170758,	-2.107403614785,	-0.246056855325,	-0.995164489431,	-1.410130620243,	-0.490381944423,	3.298864740144,	2.116260321010,	1.388765918142,	1.001153709074,	1.018804570978,	0.925480411961,	-0.961782261828,	-0.544690625204,	-0.828557777699,	-0.793659621364,	-0.357454598546,	-0.835993501816,	-4.456950378405,	-3.961357289128,	-2.782037387629,	-2.474270268288,	-1.884271523174,	-2.631537660018,	
+
+
+
+
+
+TrainMLE : -13789.593098595458
+TrainAUC : 0.710478134131
+TrainACC : 79.574830561831
+
+Test MLE : -1551.428230015764
+Test AUC : 0.664967387606
+Test ACC : 78.885923949300
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 21-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 36947.830000000002 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 113.144932954000
+totalUpdatingWeights = 21.000000000000
+totalRefreshingWeightsTime = 760.437561013000
+totalBootstrappingOperations = 21.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.965775612094
+
+
+NesterovWithG : 1 -th iteration time = 5472.515000000000 ms
+------------------
+
+---------- TEST : THE 22-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-1.362677907715,	-2.049939348986,	-0.245744009884,	-1.014975580472,	-1.407453572778,	-0.383520519963,	3.487136031819,	2.194234124959,	1.395186319286,	0.954298292140,	0.961510006415,	0.880635244683,	-0.941725039561,	-0.481274518946,	-0.803182368097,	-0.770656113542,	-0.305879854535,	-0.821487238043,	-4.534563047422,	-4.120879754400,	-2.817033178766,	-2.441160195879,	-1.760417913551,	-2.520898352072,	
+
+
+
+
+
+TrainMLE : -13633.144158710824
+TrainAUC : 0.711903723295
+TrainACC : 79.734083922818
+
+Test MLE : -1546.177118103281
+Test AUC : 0.667095667096
+Test ACC : 78.819212808539
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 22-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 36348.197000000000 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 118.602172570000
+totalUpdatingWeights = 22.000000000000
+totalRefreshingWeightsTime = 796.785752376000
+totalBootstrappingOperations = 22.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.961554620269
+
+
+NesterovWithG : 1 -th iteration time = 5587.053000000000 ms
+------------------
+
+---------- TEST : THE 23-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-1.325214662447,	-1.917672340198,	-0.148803990844,	-0.966547649350,	-1.352116619663,	-0.207780078516,	3.701014423138,	2.285624194868,	1.421013332289,	0.954492559176,	0.914737572028,	0.846885702369,	-0.880846528401,	-0.397485778051,	-0.736593434732,	-0.700902431353,	-0.218690982097,	-0.757883050397,	-4.587400951784,	-4.212298742929,	-2.810899060346,	-2.317644165513,	-1.667466014038,	-2.396458771861,	
+
+
+
+
+
+TrainMLE : -13036.074090258531
+TrainAUC : 0.712983691911
+TrainACC : 80.456279397059
+
+Test MLE : -1553.565985847442
+Test AUC : 0.669076658582
+Test ACC : 79.119412941961
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 23-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 35643.455000000002 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 124.169563308000
+totalUpdatingWeights = 23.000000000000
+totalRefreshingWeightsTime = 832.429201985000
+totalBootstrappingOperations = 23.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.957035769008
+
+
+NesterovWithG : 1 -th iteration time = 5764.473000000000 ms
+------------------
+
+---------- TEST : THE 24-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-1.352319058041,	-1.809179978814,	-0.324791589173,	-0.974949429852,	-1.373439482709,	-0.115230762232,	3.874609609717,	2.288177287311,	1.365256339402,	0.874415264999,	0.819297352979,	0.772369094374,	-0.859010316982,	-0.329918828794,	-0.718543336222,	-0.680848004351,	-0.164125358559,	-0.744903310495,	-4.526131535288,	-4.468598408797,	-2.582409915293,	-2.235690765589,	-1.628903427567,	-2.272189931973,	
+
+
+
+
+
+TrainMLE : -13112.279359266855
+TrainAUC : 0.714772762615
+TrainACC : 80.341468834488
+
+Test MLE : -1538.917189884953
+Test AUC : 0.672050075348
+Test ACC : 78.952635090060
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 24-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 37524.413999999997 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 129.918074881000
+totalUpdatingWeights = 24.000000000000
+totalRefreshingWeightsTime = 869.953610667000
+totalBootstrappingOperations = 24.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.952212362890
+
+
+NesterovWithG : 1 -th iteration time = 5609.672000000000 ms
+------------------
+
+---------- TEST : THE 25-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-1.412091766815,	-1.782383941607,	-0.425900485534,	-1.010217570891,	-1.413326447121,	-0.071209908842,	4.024943082166,	2.317676485621,	1.329064205084,	0.832552038667,	0.720754230955,	0.682168425996,	-0.878050789105,	-0.315542117878,	-0.733700366728,	-0.697024407541,	-0.154111944796,	-0.766633117403,	-4.727577777029,	-4.942065769199,	-2.640920658874,	-2.187837674866,	-1.582241711888,	-2.279629657204,	
+
+
+
+
+
+TrainMLE : -13370.124965397401
+TrainAUC : 0.715624290579
+TrainACC : 79.904447983408
+
+Test MLE : -1534.304301289433
+Test AUC : 0.673876060683
+Test ACC : 79.019346230821
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 25-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 37020.913000000000 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 135.508918326000
+totalUpdatingWeights = 25.000000000000
+totalRefreshingWeightsTime = 906.974517776000
+totalBootstrappingOperations = 25.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.947077850599
+
+
+NesterovWithG : 1 -th iteration time = 5404.728000000000 ms
+------------------
+
+---------- TEST : THE 26-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-1.444770643317,	-1.676298964995,	-0.426920587750,	-1.009525292007,	-1.448167442684,	0.047516664129,	4.171220035614,	2.332997460033,	1.288575111997,	0.785572154201,	0.624050419008,	0.589987451846,	-0.861219307926,	-0.279974587875,	-0.709090819774,	-0.689116763738,	-0.129736611704,	-0.770956743162,	-7.283749251888,	-8.211728401603,	-4.833195910436,	-4.155626530713,	-1.670520686125,	-2.347356239069,	
+
+
+
+
+
+TrainMLE : -13439.024139147206
+TrainAUC : 0.717931210549
+TrainACC : 79.800748120440
+
+Test MLE : -1542.187684204266
+Test AUC : 0.679458854871
+Test ACC : 79.052701801201
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 26-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 37119.038999999997 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 140.893366726000
+totalUpdatingWeights = 26.000000000000
+totalRefreshingWeightsTime = 944.093551354000
+totalBootstrappingOperations = 26.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 1 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.941625815997
+
+
+NesterovWithG : 1 -th iteration time = 5546.128000000000 ms
+------------------
+
+---------- TEST : THE 27-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-1.446331928415,	-1.587026851347,	-0.457690041700,	-0.971597572054,	-1.459668664427,	0.156868789529,	4.376502742864,	2.356763778185,	1.307713912020,	0.788796284032,	0.622011627056,	0.599395611372,	-0.830128633753,	-0.219190948183,	-0.670023500349,	-0.677712473376,	-0.097794706753,	-0.759054383657,	-8.691802763229,	-9.781686857289,	-6.294422153128,	-5.489022504704,	-2.221647152241,	-2.802396883400,	
+
+
+
+
+
+TrainMLE : -13291.391476037250
+TrainAUC : 0.718985335696
+TrainACC : 80.100737009740
+
+Test MLE : -1552.155158209797
+Test AUC : 0.682122259334
+Test ACC : 79.019346230821
+ ----------------- end of the 1-th epoch ----------------- 
+ ----------------- end of the 27-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 36066.006999999998 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 1 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 146.420788948000
+totalUpdatingWeights = 27.000000000000
+totalRefreshingWeightsTime = 980.159551403000
+totalBootstrappingOperations = 27.000000000000
+
+
+
+
+randr[]:  0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26
+randr[]:  25 11 19 13 16 23 5 7 15 2 9 8 14 20 6 4 3 24 18 17 26 12 0 10 22 1 21
+------------------
+Start NesterovWithGminBatch : 2 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.935849970090
+
+
+NesterovWithG : 2 -th iteration time = 5509.001000000000 ms
+------------------
+
+---------- TEST : THE 28-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-1.422495687909,	-1.376424245455,	-0.341982837884,	-0.941937973569,	-1.422110318689,	0.283913850982,	4.532161959119,	2.395530740548,	1.273165263733,	0.759236460177,	0.519360279653,	0.499347744271,	-0.779914318674,	-0.163416844600,	-0.614043226265,	-0.615188370719,	-0.021346897523,	-0.702587805219,	-9.556597642273,	-11.156553643408,	-6.748602478076,	-5.889354696491,	-1.829092959828,	-2.490149462198,	
+
+
+
+
+
+TrainMLE : -12902.056771148242
+TrainAUC : 0.720477071075
+TrainACC : 80.593311358839
+
+Test MLE : -1543.483770561141
+Test AUC : 0.685477081279
+Test ACC : 78.952635090060
+ ----------------- end of the 2-th epoch ----------------- 
+ ----------------- end of the 1-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 37067.978999999999 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 2 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 151.909016184000
+totalUpdatingWeights = 28.000000000000
+totalRefreshingWeightsTime = 1017.227525760000
+totalBootstrappingOperations = 28.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 2 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.929744143749
+
+
+NesterovWithG : 2 -th iteration time = 5803.828000000000 ms
+------------------
+
+---------- TEST : THE 29-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-1.514478655743,	-1.288064743461,	-0.373018707268,	-1.038138688713,	-1.513910680990,	0.287389497030,	4.574315029578,	2.297630560435,	1.146531223806,	0.602880396687,	0.339961281006,	0.322174106912,	-0.846776241587,	-0.203754456173,	-0.673669329979,	-0.687905155398,	-0.069151291488,	-0.777120962424,	-10.485756638223,	-12.491696119355,	-7.646905566296,	-6.641723564218,	-1.899981295343,	-2.656424025184,	
+
+
+
+
+
+TrainMLE : -13531.743502181944
+TrainAUC : 0.721866380598
+TrainACC : 79.489648531536
+
+Test MLE : -1554.146241289693
+Test AUC : 0.688155278860
+Test ACC : 79.286190793863
+ ----------------- end of the 2-th epoch ----------------- 
+ ----------------- end of the 2-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 37500.404999999999 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 2 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 157.692588481000
+totalUpdatingWeights = 29.000000000000
+totalRefreshingWeightsTime = 1054.727924748000
+totalBootstrappingOperations = 29.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 2 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.923302281109
+
+
+NesterovWithG : 2 -th iteration time = 5670.876000000000 ms
+------------------
+
+---------- TEST : THE 30-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-1.549210444118,	-1.245567316227,	-0.324863301479,	-1.060488922308,	-1.505409669463,	0.333290165454,	4.724223902940,	2.303561667591,	1.113500231882,	0.550702823497,	0.267152188693,	0.242902837572,	-0.840116453652,	-0.160736873940,	-0.922595532265,	-0.697891011851,	-0.061855497531,	-0.823180936309,	-11.289140454410,	-19.751404607337,	-9.327161813220,	-7.944913376065,	-3.855824499161,	-2.912688557014,	
+
+
+
+
+
+TrainMLE : -13746.931966686821
+TrainAUC : 0.723425034948
+TrainACC : 79.374837968964
+
+Test MLE : -1599.892426706350
+Test AUC : 0.688954750424
+Test ACC : 79.386257505003
+ ----------------- end of the 2-th epoch ----------------- 
+ ----------------- end of the 3-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 36896.074999999997 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 2 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 163.344146617000
+totalUpdatingWeights = 30.000000000000
+totalRefreshingWeightsTime = 1091.623993797000
+totalBootstrappingOperations = 30.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 2 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.916518433546
+
+
+NesterovWithG : 2 -th iteration time = 5439.402000000000 ms
+------------------
+
+---------- TEST : THE 31-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-1.453243686421,	-1.039729532016,	-0.169298621727,	-0.946976651829,	-1.370498558494,	0.472684924258,	5.013807545967,	2.436574326711,	1.229405333712,	0.632210864602,	0.357759840142,	0.365959964997,	-0.704314930473,	0.007095211124,	-0.888385183496,	-0.559174613242,	0.102946864802,	-0.702638493075,	-11.970074913241,	-23.206582716271,	-10.314652938281,	-8.652364090639,	-4.463031010071,	-2.939913029791,	
+
+
+
+
+
+TrainMLE : -12773.297114684618
+TrainAUC : 0.723554570954
+TrainACC : 80.982185844969
+
+Test MLE : -1582.777491479843
+Test AUC : 0.690878498974
+Test ACC : 79.086057371581
+ ----------------- end of the 2-th epoch ----------------- 
+ ----------------- end of the 4-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 36765.709000000003 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 2 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 168.764666033000
+totalUpdatingWeights = 31.000000000000
+totalRefreshingWeightsTime = 1128.389698822000
+totalBootstrappingOperations = 31.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 2 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.909386754176
+
+
+NesterovWithG : 2 -th iteration time = 5287.118000000000 ms
+------------------
+
+---------- TEST : THE 32-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-1.506641830477,	-0.947518540335,	-0.182136700452,	-1.028117654316,	-1.389531914282,	0.439932794170,	5.117498508207,	2.387462919787,	1.174711647975,	0.572091385387,	0.283670693070,	0.299077898541,	-0.748603889757,	-0.019039134255,	-1.031873074424,	-0.603334990747,	0.086815012081,	-0.760752017402,	-12.719073088762,	-26.576085696161,	-11.303604646091,	-9.257562894396,	-5.275001287615,	-3.131625944662,	
+
+
+
+
+
+TrainMLE : -12935.760587904795
+TrainAUC : 0.724519255711
+TrainACC : 80.578497092700
+
+Test MLE : -1594.266597319990
+Test AUC : 0.691178220414
+Test ACC : 79.286190793863
+ ----------------- end of the 2-th epoch ----------------- 
+ ----------------- end of the 5-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 36474.870000000003 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 2 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 174.031931433000
+totalUpdatingWeights = 32.000000000000
+totalRefreshingWeightsTime = 1164.864562554000
+totalBootstrappingOperations = 32.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 2 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.901901492803
+
+
+NesterovWithG : 2 -th iteration time = 5675.335000000000 ms
+------------------
+
+---------- TEST : THE 33-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-1.587394549651,	-0.874171976718,	-0.248847481926,	-1.138479253839,	-1.438345590952,	0.386417520882,	5.174038407912,	2.262244837457,	1.072186607738,	0.446759676958,	0.155136629770,	0.176005417321,	-0.807494423473,	-0.047807579094,	-1.174944376831,	-0.663884156371,	0.052655761231,	-0.828583003829,	-13.533787304142,	-29.680435298195,	-12.368037364964,	-9.924969791858,	-6.069069755726,	-3.233716681396,	
+
+
+
+
+
+TrainMLE : -13598.652803788917
+TrainAUC : 0.725407190781
+TrainACC : 79.545202029554
+
+Test MLE : -1644.023112159194
+Test AUC : 0.690833476441
+Test ACC : 79.186124082722
+ ----------------- end of the 2-th epoch ----------------- 
+ ----------------- end of the 6-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 37895.059999999998 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 2 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 179.687579921000
+totalUpdatingWeights = 33.000000000000
+totalRefreshingWeightsTime = 1202.759617294000
+totalBootstrappingOperations = 33.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 2 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.894056991277
+
+
+NesterovWithG : 2 -th iteration time = 5533.277000000000 ms
+------------------
+
+---------- TEST : THE 34-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-1.518129913641,	-0.679490376282,	-0.136223406010,	-1.082310161422,	-1.302171836437,	0.466124667030,	5.397025527529,	2.352044916677,	1.153848995178,	0.517907182207,	0.231219684182,	0.266347716571,	-0.715625828247,	0.059721061542,	-1.158497924538,	-0.564249907390,	0.178350927447,	-0.736401982554,	-14.041706279346,	-32.407903908197,	-13.002669565092,	-10.457385054538,	-6.668677381526,	-3.182002406524,	
+
+
+
+
+
+TrainMLE : -12844.574766296126
+TrainAUC : 0.725293659561
+TrainACC : 80.856264582793
+
+Test MLE : -1617.256978887516
+Test AUC : 0.692323079130
+Test ACC : 79.419613075384
+ ----------------- end of the 2-th epoch ----------------- 
+ ----------------- end of the 7-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
+
+after  Bootstrap: encWData[0].logq = 395
+Use Bootstrap To Recrypt Ciphertext time = 37100.502000000000 ms
+------------------
+--------------------------------------------------------------------------------
+
+
+ !!! STOP 2 ITERATION !!! 
+
+
+
+
+
+totalUpdatingWeightsTime = 185.201427820000
+totalUpdatingWeights = 34.000000000000
+totalRefreshingWeightsTime = 1239.860114722000
+totalBootstrappingOperations = 34.000000000000
+
+
+
+
+------------------
+Start NesterovWithGminBatch : 2 -th iteration
+
+
+
+
+encVData[0].logq = 395
+
+
+
+
+INSIDE iter < 5;  poly3 = +0.500000000000 -0.150120000000x +0.001593000000x^3 
+
+gamma = 1.885847679208
+
+
+NesterovWithG : 2 -th iteration time = 5384.539000000000 ms
+------------------
+
+---------- TEST : THE 35-th ITERATION : Weights, AUC, MLE ----------
+Current cWdata (encVData) : 
+-1.613364132826,	-0.550329192376,	-0.218541195343,	-1.223644728119,	-1.379128783968,	0.380285406975,	5.422939959950,	2.194562075787,	1.013861565204,	0.386540101779,	0.082414692605,	0.135974236095,	-0.793301450379,	0.021845218194,	-1.302673095292,	-0.632626204483,	0.146425557010,	-0.815528322176,	-14.599721937930,	-35.036474997861,	-13.793993888205,	-11.002220198176,	-7.250213717681,	-3.424817666892,	
+
+
+
+
+
+TrainMLE : -13537.500307754410
+TrainAUC : 0.725799535111
+TrainACC : 79.556312729158
+
+Test MLE : -1668.720499963409
+Test AUC : 0.691365385518
+Test ACC : 79.052701801201
+ ----------------- end of the 2-th epoch ----------------- 
+ ----------------- end of the 8-th iteration ----------------- 
+
+--------------------------------------------------------------------------------
+
+
+
+
+encVData[0].logq = 55
+
+
+
+------------------
+Start Use Bootstrap To Recrypt Ciphertext
+
+before Bootstrap: encWData[0].logq = 75
