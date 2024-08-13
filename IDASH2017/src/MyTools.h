@@ -46,8 +46,8 @@ const long double E = 2.71828182845904523536028747135266249775724709369995L;
 
 // MNIST : [-16, +16]
 // Credit :[-8,   +8]
-//static double degree3[3] = {0.5,  -0.15012, 0.001593};     // Credit :[-8,   +8]
-static double degree3[3] = {0.5,  -0.0843,          0.0002}; // MNIST : [-16, +16]
+static double degree3[3] = {0.5,  -0.15012, 0.001593};     // Credit :[-8,   +8]
+//static double degree3[3] = {0.5,  -0.0843,          0.0002}; // MNIST : [-16, +16]
 
 
 
