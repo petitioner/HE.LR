@@ -6,6 +6,22 @@
 
 RM := rm
 
+# Define the project root path
+PROJECT_ROOT := $(abspath $(dir $(firstword $(MAKEFILE_LIST)))/..)
+
+# Directories
+SRC_DIR := $(PROJECT_ROOT)/src
+INCLUDE_DIR := $(PROJECT_ROOT)/lib/include
+HEAAN_INCLUDE_DIR := $(PROJECT_ROOT)/HEAAN/HEAAN/src
+LIB_DIR := $(PROJECT_ROOT)/lib/lib
+HEAAN_LIB_DIR := $(PROJECT_ROOT)/HEAAN/HEAAN/lib
+
+# Compiler and flags
+CXX := g++
+CXXFLAGS := -I$(INCLUDE_DIR) -I$(HEAAN_INCLUDE_DIR) -std=c++11 -O2 -g -Wall
+LDFLAGS := -L$(LIB_DIR) -L$(HEAAN_LIB_DIR) -pthread
+LIBS := -lntl -lgmp -lHEAAN
+
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include src/subdir.mk
@@ -38,24 +54,28 @@ endif
 
 -include ../makefile.defs
 
-# Add inputs and outputs from these tool invocations to the build variables 
-
 # All Target
-all: iDASH2017
+all: iDASH2017 
 
 # Tool invocations
 iDASH2017: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
-	@echo 'Invoking: GCC C++ Linker'
-	g++ -L"/home/sunly/Downloads/IDASH2017-master/IDASH2017/lib/lib" -L"/home/sunly/Downloads/IDASH2017-master/IDASH2017/HEAAN/HEAAN/lib" -pthread -o "iDASH2017" $(OBJS) $(USER_OBJS) $(LIBS)
+	@echo 'Invoking: GCC C++ Linker4Testing'
+	$(CXX) $(LDFLAGS) -o $@ $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
+# Compile command
+%.o: $(SRC_DIR)/%.cpp
+	@echo 'Building file: $<'
+	$(CXX) $(CXXFLAGS) -MMD -MP -MF"$(@:%.o=%.d)" -c -o $@ $<
+
 # Other Targets
 clean:
-	-$(RM) $(CC_DEPS)$(C++_DEPS)$(EXECUTABLES)$(C_UPPER_DEPS)$(CXX_DEPS)$(OBJS)$(CPP_DEPS)$(C_DEPS) iDASH2017
+	-$(RM) $(CC_DEPS) $(C++_DEPS) $(EXECUTABLES) $(C_UPPER_DEPS) $(CXX_DEPS) $(OBJS) $(CPP_DEPS) $(C_DEPS) CNNinference
 	-@echo ' '
 
 .PHONY: all clean dependents
 
 -include ../makefile.targets
+
