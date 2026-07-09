@@ -6,6 +6,7 @@ logQ = 275, logN = 16
 slots = 32768, batch = 32
 rnum = 27, cnum = 1
 min-batch size = 1024, minBatchDimBits = 10
+
 ------------------
 Start Scheme generating
 Scheme generation time = 8339.88 ms
